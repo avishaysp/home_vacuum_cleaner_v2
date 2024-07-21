@@ -2,6 +2,7 @@
 
 #include "dirt_sensor.h"
 #include "logger.h"
+#include "house.h"
 
 
 class DirtSensorImp: public DirtSensor {

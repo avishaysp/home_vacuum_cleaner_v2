@@ -3,6 +3,7 @@
 #include "enums.h"
 #include "walls_sensor.h"
 #include "logger.h"
+#include "house.h"
 
 
 class WallsSensorImp: public WallsSensor {

@@ -4,19 +4,23 @@ WallsSensorImp::WallsSensorImp(const House& house, const House::Location& curr_l
 
 
 bool WallsSensorImp::isWall(Direction d) const {
+    int row = curr_location.getRow();
+    int col = curr_location.getCol();
+    int row_limit = house.getRowsCount();
+    int col_limit = house.getColsCount();
     switch (d)
     {
     case Direction::North:
-        return house.getTile(curr_location.getRow() - 1, curr_location.getCol()).isWall();
+        return (row = 0) || (house.getTile(row - 1, col).isWall());
         break;
     case Direction::South:
-        return house.getTile(curr_location.getRow() + 1, curr_location.getCol()).isWall();
+        return (row = row_limit - 1) || (house.getTile(row + 1, col).isWall());
         break;
     case Direction::East:
-        return house.getTile(curr_location.getRow(), curr_location.getCol() + 1).isWall();
+        return (col = 0) || house.getTile(row, col + 1).isWall();
         break;
     case Direction::West:
-        return house.getTile(curr_location.getRow(), curr_location.getCol() - 1).isWall();
+        return (col = col_limit - 1) || house.getTile(row, col - 1).isWall();
         break;
     default:
         break;
