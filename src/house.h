@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_map>
+#include "logger.h"
 
 class House {
 
@@ -13,16 +14,20 @@ public:
     public:
         enum Type { Open, Wall, DockingStation };
 
-        Tile(Type type = Open, int dirtLevel = 0);
+        Tile(Type type, int dirt_level);
+        Tile();
 
         bool isWall() const;
+        void setAsWall();
         bool isDockingStation() const;
+        void setAsDockingStation();
         int getDirtLevel() const;
+        void setDirtLevel(int new_dirt);
         void decreaseOneDirt();
 
     private:
         Type type;
-        int dirtLevel;
+        int dirt_level;
     };
 
 
