@@ -1,6 +1,8 @@
 #include "battery_meter_imp.h"
 
 
-std::size_t BatteryMeterImp::getBatteryState() const {
-    return 1;
+BatteryMeterImp::BatteryMeterImp(size_t& battery_level) : battery_level(battery_level) {}
+
+size_t BatteryMeterImp::getBatteryState() const {
+    return battery_level;
 }
