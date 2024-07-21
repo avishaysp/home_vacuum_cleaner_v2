@@ -4,39 +4,25 @@
 #include <vector>
 #include <iostream>
 #include <unordered_map>
-#include "Direction.h"
 
 class House {
 
 public:
-    House(size_t rows, size_t cols);
 
     class Tile {
-        size_t dirt_level;
-        bool wall_on_north;
-        bool wall_on_south;
-        bool wall_on_east;
-        bool wall_on_west;
-
     public:
-        Tile();
-        Tile(size_t dirt_level, bool wall_on_north, bool wall_on_south, bool wall_on_east, bool wall_on_west);
+        enum Type { Open, Wall, DockingStation };
 
-        // Getters
-        size_t getDirt() const;
-        bool getNorthWall() const;
-        bool getSouthWall() const;
-        bool getEastWall() const;
-        bool getWestWall() const;
+        Tile(Type type = Open, int dirtLevel = 0);
 
-        // Setters
-        void setDirt(size_t dirt);
-        void setNorthWall(bool val);
-        void setSouthWall(bool val);
-        void setEastWall(bool val);
-        void setWestWall(bool val);
+        bool isWall() const;
+        bool isDockingStation() const;
+        int getDirtLevel() const;
+        void decreaseOneDirt();
 
-        void removeOneDirt();
+    private:
+        Type type;
+        int dirtLevel;
     };
 
 
@@ -66,12 +52,6 @@ public:
         void print() const;
     };
 
-
-    size_t getDirt(Location loc) const;
-    size_t getDirt(size_t row, size_t col) const;
-    void setDirt(Location loc, size_t value);
-    void setDirt(size_t row, size_t col, size_t value);
-
     Tile& getTile(Location loc);
     Tile& getTile(size_t row, size_t col);
     const Tile& getTile(Location loc) const;
@@ -80,7 +60,9 @@ public:
     size_t getRowsCount() const;
     size_t getColsCount() const;
 
-    size_t calcTotalDirt() const;
+    int calcTotalDirt() const;
+
+    House(size_t rows, size_t cols);
 
 private:
     std::vector<std::vector<House::Tile>> mat;

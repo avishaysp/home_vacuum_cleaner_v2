@@ -6,27 +6,6 @@
 
 House::House(size_t rows, size_t cols) : mat(rows, std::vector<House::Tile>(cols, House::Tile())), rows(rows), cols(cols) {}
 
-size_t House::getDirt(House::Location loc) const {
-   return House::getDirt(loc.getRow(), loc.getCol());
-}
-
-size_t House::getDirt(size_t row, size_t col) const {
-    if (row < rows && col < cols) {
-        return mat[row][col].getDirt();
-    }
-    return -99;
-}
-
-void House::setDirt(House::Location loc, size_t value) {
-    return House::setDirt(loc.getRow(), loc.getCol(), value);
-}
-
-void House::setDirt(size_t row, size_t col, size_t value) {
-    if (row < rows && col < cols) {
-        mat[row][col].setDirt(value);
-    }
-}
-
 House::Tile& House::getTile(House::Location loc) {
     size_t row = loc.getRow();
     size_t col = loc.getCol();
@@ -55,12 +34,12 @@ size_t House::getColsCount() const {
     return cols;
 }
 
-size_t House::calcTotalDirt() const {
-    size_t sum = 0;
+int House::calcTotalDirt() const {
+    int sum = 0;
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
-            if (mat[i][j].getDirt() > 0) {
-                sum += mat[i][j].getDirt();
+            if (mat[i][j].getDirtLevel() > 0) {
+                sum += mat[i][j].getDirtLevel();
             }
         }
     }
@@ -119,54 +98,30 @@ void House::Location::print() const {
 
 /* Tile */
 
-House::Tile::Tile()
-    : dirt_level(0), wall_on_north(false), wall_on_south(false), wall_on_east(false), wall_on_west(false) {}
+// Tile implementation
+House::Tile::Tile(Type type, int dirtLevel) : type(type), dirtLevel(dirtLevel) {}
 
-House::Tile::Tile(size_t dirt_level, bool wall_on_north, bool wall_on_south, bool wall_on_east, bool wall_on_west)
-    : dirt_level(dirt_level), wall_on_north(wall_on_north), wall_on_south(wall_on_south), wall_on_east(wall_on_east), wall_on_west(wall_on_west) {}
-
-// Getter implementations
-size_t House::Tile::getDirt() const {
-    return dirt_level;
+bool House::Tile::isWall() const {
+    return type == Wall;
 }
 
-bool House::Tile::getNorthWall() const {
-    return wall_on_north;
+bool House::Tile::isDockingStation() const {
+    return type == DockingStation;
 }
 
-bool House::Tile::getSouthWall() const {
-    return wall_on_south;
+int House::Tile::getDirtLevel() const {
+    if (type != Open) {
+        // TODO: log an error
+    }
+    return dirtLevel;
 }
 
-bool House::Tile::getEastWall() const {
-    return wall_on_east;
-}
-
-bool House::Tile::getWestWall() const {
-    return wall_on_west;
-}
-
-// Setter implementations
-void House::Tile::setDirt(size_t dirt) {
-    dirt_level = dirt;
-}
-
-void House::Tile::setNorthWall(bool val) {
-    wall_on_north = val;
-}
-
-void House::Tile::setSouthWall(bool val) {
-    wall_on_south = val;
-}
-
-void House::Tile::setEastWall(bool val) {
-    wall_on_east = val;
-}
-
-void House::Tile::setWestWall(bool val) {
-    wall_on_west = val;
-}
-
-void House::Tile::removeOneDirt() {
-    dirt_level = dirt_level > 0 ? (dirt_level - 1) : 0;
+void House::Tile::decreaseOneDirt() {
+    if (type != Open) {
+        // TODO: log an error
+        return;
+    }
+    if (dirtLevel > 0) {
+        --dirtLevel;
+    }
 }
