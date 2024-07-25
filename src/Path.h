@@ -6,7 +6,8 @@
 
 class Path {
 public:
-
+    Path();
+    
     Path(const House::Location start_loc);
 
     void addEntry(const House::Location loc);

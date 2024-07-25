@@ -6,21 +6,23 @@
 #include "dirt_sensor_imp.h"
 #include "logger.h"
 
-class DfsAlgorithm : public AbstractAlgorithm {
+class MyAlgorithm : public AbstractAlgorithm {
   
-  std::size_t maxSteps;
+  std::size_t max_steps;
 
-  int battery_size;
+  const size_t battery_size;
   House::Location starting_location;
 
-  WallsSensorImp wallsSensor;  
-  DirtSensorImp dirtSensor;    
-  BatteryMeterImp batteryMeter; 
+  std::unique_ptr<const WallsSensor> walls_sensor;  
+  std::unique_ptr<const DirtSensor>  dirt_sensor;    
+  std::unique_ptr<const BatteryMeter> battery_meter; 
 
 public:
-  DfsAlgorithm(const size_t battery_size,  const House::Location starting_location);
+  MyAlgorithm();
 
-  void setMaxSteps(size_t maxSteps) override;
+  ~MyAlgorithm();
+
+  void setMaxSteps(size_t max_steps) override;
   void setWallsSensor(const WallsSensor&) override;
   void setDirtSensor(const DirtSensor&) override;
   void setBatteryMeter(const BatteryMeter&) override;

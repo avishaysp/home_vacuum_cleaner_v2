@@ -2,6 +2,8 @@
 
 #include "Path.h"
 
+Path::Path() {}
+
 Path::Path(const House::Location start_loc) {
     vec.push_back(start_loc);
 }
