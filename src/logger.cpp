@@ -22,14 +22,6 @@ void Logger::log(LogLevel level, const std::string& message) {
     }
 }
 
-void Logger::setLogFile(const std::string& filename) {
-    logFile = filename;
-    if (logStream.is_open()) {
-        logStream.close();
-    }
-    openLogFile();
-}
-
 Logger::~Logger() {
     if (logStream.is_open()) {
         logStream.close();
@@ -37,7 +29,12 @@ Logger::~Logger() {
 }
 
 void Logger::openLogFile() {
-    logStream.open(logFile, std::ios_base::app);
+    if (firstOpen) {
+        logStream.open(logFile, std::ios_base::out | std::ios_base::trunc);
+        firstOpen = false;
+    } else {
+        logStream.open(logFile, std::ios_base::out | std::ios_base::app);
+    }
     if (!logStream.is_open()) {
         std::cerr << "Failed to open log file: " << logFile << std::endl;
     }

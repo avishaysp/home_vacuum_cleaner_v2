@@ -19,7 +19,7 @@ public:
     void setLogFile(const std::string& filename);
 
 private:
-    Logger() : logFile("vacuum_cleaner.log") {}
+    Logger() : logFile("vacuum_cleaner.log"), firstOpen(true) {}
     ~Logger();
 
     Logger(const Logger&) = delete;
@@ -27,6 +27,7 @@ private:
 
     std::ofstream logStream;
     std::string logFile;
+    bool firstOpen;
 
     void openLogFile();
     std::string getLogLevelString(LogLevel level);
