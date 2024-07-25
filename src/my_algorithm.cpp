@@ -27,7 +27,7 @@ void MyAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
 }
 
 Step MyAlgorithm::nextStep() {
-    std::cout << battery_size;
+    
     return Step::Stay;
 }
 
