@@ -86,7 +86,7 @@ void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) c
                 logger.log(INFO, std::format("Set an empty Tile ({},{})", row_index, col_index));
             } else if (isdigit(c)) {
                 house->getTile(row_index, col_index).setDirtLevel(int(c - '0'));
-                logger.log(INFO, std::format("Set an dirty Tile ({},{}). Diet level: {}", row_index, col_index, int(c - '0')));
+                logger.log(INFO, std::format("Set an dirty Tile ({},{}). Dirt level: {}", row_index, col_index, int(c - '0')));
             } else {
                 logger.log(ERROR, std::format("Invalid charecter in house map ({},{})", row_index, col_index));
                 std::exit(EXIT_FAILURE);
