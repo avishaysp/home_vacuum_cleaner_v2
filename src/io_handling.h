@@ -9,6 +9,8 @@
 #include <sstream>
 #include "house.h"
 #include "Path.h"
+#include "logger.h"
+#include <format>
 
 
 class FileReader {
@@ -16,11 +18,10 @@ class FileReader {
 
     std::vector<std::string> split(const std::string &str, const char delimiter) const;
     size_t strToSize_t(const std::string &str) const;
+    std::string trim(const std::string &str) const;
     House::Location parseLocation(const std::string& str) const;
-    std::pair<size_t, size_t> getHouseDimensions(const std::string& filename) const;
-    void surroundHouseWithWalls(const StepHouse& step_house, House& house) const;
-    void parseHouse(const StepHouse& step_house, House& house) const;
-    bool isTransition(const StepHouse& step_house, size_t i1, size_t j1, size_t i2, size_t j2) const;
+    size_t readArgument(const std::string& str) const;
+    void ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const;
 
 public:
     FileReader(const std::string& file_path);
@@ -29,7 +30,7 @@ public:
         size_t max_battery_steps;
         size_t max_num_of_steps;
         House::Location docking_loc;
-        House house_map;
+        std::shared_ptr<House> house_map;
     };
 
     file_reader_output readFile() const;
@@ -37,9 +38,6 @@ public:
 
 class FileWriter {
     std::string file_path;
-    void printTopWall(std::ofstream& file, const House& house, size_t row, size_t cols) const;
-    void printDirt(std::ofstream& file, const House& house, size_t row, size_t cols) const;
-    void printBottomWall(std::ofstream& file, const House& house, size_t row, size_t cols) const;
 
 public:
     FileWriter(const std::string& file_path);

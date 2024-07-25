@@ -46,6 +46,22 @@ int House::calcTotalDirt() const {
     return sum;
 }
 
+void House::print() const {
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < cols; j++) {
+            Tile tile = mat[i][j];
+            if (tile.isDockingStation()) {
+                std::cout << 'D';
+            } else if (tile.isWall()) {
+                std::cout << 'W';
+            } else {
+                std::cout << tile.getDirtLevel();
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 /* Location */
 
 House::Location::Location(size_t row, size_t col) : row(row), col(col) {}
@@ -98,30 +114,46 @@ void House::Location::print() const {
 
 /* Tile */
 
-// Tile implementation
-House::Tile::Tile(Type type, int dirtLevel) : type(type), dirtLevel(dirtLevel) {}
+House::Tile::Tile(Type type, int dirt_level) : type(type), dirt_level(dirt_level) {}
+House::Tile::Tile() : type(Open), dirt_level(0) {}
 
 bool House::Tile::isWall() const {
     return type == Wall;
+}
+
+void House::Tile::setAsWall() {
+    type = Wall;
 }
 
 bool House::Tile::isDockingStation() const {
     return type == DockingStation;
 }
 
+void House::Tile::setAsDockingStation() {
+    type = DockingStation;
+}
+
 int House::Tile::getDirtLevel() const {
     if (type != Open) {
-        // TODO: log an error
+        logger.log(ERROR, "Tried to get the dirt level of a Wall/Docking tile");
+        std::exit(EXIT_FAILURE);
     }
-    return dirtLevel;
+    return dirt_level;
+}
+
+void House::Tile::setDirtLevel(int new_dirt) {
+    if (type != Open) {
+        logger.log(WARNING, "Set the dirt level of a Wall/Docking tile");
+    }
+    dirt_level = new_dirt;
 }
 
 void House::Tile::decreaseOneDirt() {
     if (type != Open) {
-        // TODO: log an error
+        logger.log(WARNING, "Tried todecrease the dirt level of a Wall/Docking tile");
         return;
     }
-    if (dirtLevel > 0) {
-        --dirtLevel;
+    if (dirt_level > 0) {
+        --dirt_level;
     }
 }

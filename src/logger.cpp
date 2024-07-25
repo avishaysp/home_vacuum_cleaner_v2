@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "logger.h"
 #include <ctime>
 #include <iomanip>
 
@@ -7,11 +7,11 @@ Logger& Logger::getInstance() {
     return instance;
 }
 
-void Logger::log(LogLevel level, const std::string& message) {    
+void Logger::log(LogLevel level, const std::string& message) {
     if (!logStream.is_open()) {
         openLogFile();
     }
-    
+
     if (logStream.is_open()) {
         std::time_t now = std::time(nullptr);
         logStream << "[" << std::put_time(std::localtime(&now), "%Y-%m-%d %H:%M:%S") << "] "

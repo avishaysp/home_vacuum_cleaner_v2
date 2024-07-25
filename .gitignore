@@ -32,3 +32,8 @@
 *.app
 .DS_Store
 .vscode/settings.json
+bin/*
+
+# Logs
+*.log
+bin/executable
