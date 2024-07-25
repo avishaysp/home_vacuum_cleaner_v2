@@ -15,6 +15,6 @@ public:
     DirtSensorImp(House::Location& curr_location);
     DirtSensorImp(const std::shared_ptr<House> house, House::Location& curr_location);
     void DirtSensorImp::setHouse(const std::shared_ptr<House> house);
-    int dirtLevel() const;
+    int dirtLevel() const override;
 };
 

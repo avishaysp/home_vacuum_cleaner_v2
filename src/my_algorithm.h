@@ -13,14 +13,12 @@ class MyAlgorithm : public AbstractAlgorithm {
   const size_t battery_size;
   House::Location starting_location;
 
-  std::unique_ptr<const WallsSensor> walls_sensor;  
-  std::unique_ptr<const DirtSensor>  dirt_sensor;    
-  std::unique_ptr<const BatteryMeter> battery_meter; 
+  const WallsSensor* walls_sensor;  
+  const DirtSensor* dirt_sensor;    
+  const BatteryMeter* battery_meter; 
 
 public:
   MyAlgorithm();
-
-  ~MyAlgorithm();
 
   void setMaxSteps(size_t max_steps) override;
   void setWallsSensor(const WallsSensor&) override;

@@ -12,7 +12,8 @@ MySimulator::MySimulator()
       walls_sensor(current_location),
       battery_meter(current_battery),
       dirt_sensor(current_location),
-      algo(nullptr) {}
+      algo(nullptr),
+      delta_battery(0) {}
 
 void MySimulator::readHouseFile(const std::string input_file_path) {
     FileReader fr(input_file_path);
@@ -23,7 +24,7 @@ void MySimulator::readHouseFile(const std::string input_file_path) {
 //setters
 
 void MySimulator::setBatterySize(const size_t battery_size) {
-    this->battery_size = battery_size;
+    this->battery_size = battery_size * 100;
 }
 
 void MySimulator::setCurrestBattery() {
@@ -71,14 +72,14 @@ void MySimulator::setProperties(const size_t max_num_of_steps, const size_t max_
     setHouse(house_map);
     setDockingStation(docking_loc);
     setCurrentLocation();
-    addToHistory();
     setWallsSensor();
     setDirtSensor();
+    delta_battery = battery_size / 20;
 
 }
 
-void MySimulator::addToHistory() {
-    history_path.addEntry(current_location);
+void MySimulator::addToHistory(Step step) {
+    history_path.addEntry(step);
 }
 
 const Path& MySimulator::getPath() const {
@@ -90,55 +91,63 @@ size_t MySimulator::getHistoryLength() const {
 }
 
 
-
-
-/*
-VacuumCleaner::vacuum_cleaner_output VacuumCleaner::cleanHouse() {
-    Algorithm algo(wall_sensor, battery_sensor, dirt_sensor, battery_size, current_location);
+void MySimulator::run() {
     for (size_t i = 0; i < max_steps; ++i) {
-        if ((current_total_dirt <= 0) && (current_location == docking_loc)) {
-            break;
-        }
-        Direction step = algo.nextStep();
+
+        Step step = algo->nextStep();
 
         //Stay in docking station
-        if ((step.getValue() == Direction::Value::Stay) && (current_location == docking_loc)) {
-            size_t updated_battery = current_battery + battery_size / 20;
-            current_battery = (updated_battery > battery_size) ? battery_size : updated_battery;
+        if ((step == Step::Stay) && (current_location == docking_loc)) {
+            current_battery += delta_battery; 
         }
 
         //Stay and clean
-        else if (step.getValue() == Direction::Value::Stay) {
-            decreaseTotalDirt();
-            updateHouse();
-            current_battery -= 1;
+        else if (step == Step::Stay) {
+            updateDirtLevel();
+            current_battery -= 100;
         }
 
         //Move to another location
-        else {
+        else if (step != Step::Finish) {
             move(step);
-            current_battery -= 1;
+            current_battery -= 100;
         }
 
-        addToHistory();
+        //finish running
+        else {
+            
+        }
+
+        addToHistory(step);
     }
-    return {current_battery, current_total_dirt, current_location == docking_loc};
+}
+
+void MySimulator::updateDirtLevel() {
+    house->getTile(current_location).decreaseOneDirt();
+}
+
+void MySimulator::move(Step step) {
+    switch (step)
+        {
+        case Step::North:
+            current_location.setBoth(current_location.getRow() - 1, current_location.getCol());
+            break;
+        case Step::South:
+            current_location.setBoth(current_location.getRow() + 1, current_location.getCol());
+            break;
+        case Step::East:
+            current_location.setBoth(current_location.getRow(), current_location.getCol() + 1);
+            break;
+        case Step::West:
+            current_location.setBoth(current_location.getRow(), current_location.getCol() - 1);
+            break;
+        default:
+            break;
+        }
 }
 
 
 
-void VacuumCleaner::move(const Direction direction) {
-    current_location.setBoth(current_location.getRow() + direction.getX(), current_location.getCol() + direction.getY());
-}
 
-void VacuumCleaner::decreaseTotalDirt() {
-    current_total_dirt -= 1;
-}
-
-void VacuumCleaner::updateHouse() {
-    house.getTile(current_location).removeOneDirt();
-}
-
-*/
 
 

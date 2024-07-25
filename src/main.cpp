@@ -12,21 +12,19 @@ int main(int argc, char* argv[]) {
 
     std::string input_file_path = argv[1];
     logger.log(INFO, "~~~~~~~~~~~~~~~~~~~~~~~ Vacuum Cleaner ~~~~~~~~~~~~~~~~~~~~~~~");
-    std::string input_file_path = "input_a.txt";
     std::string output_file_path = "output_" + input_file_path;
 
     MySimulator simulator;
     simulator.readHouseFile(input_file_path);
 
-    MyAlgorithm algo;
-    simulator.setAlgorithm(algo);
+    simulator.setAlgorithm(std::make_shared<MyAlgorithm>());
     simulator.run();
 
-    FileWriter fw(output_file_path);
-    fw.writePath(vacuumCleaner.getPath());
-    fw.writedDirt(result.dirt_left);
-    fw.writedBat(result.battery_level);
-    fw.writedAccomplish(result.dirt_left, result.is_in_doc);
+    // FileWriter fw(output_file_path);
+    // fw.writePath(vacuumCleaner.getPath());
+    // fw.writedDirt(result.dirt_left);
+    // fw.writedBat(result.battery_level);
+    // fw.writedAccomplish(result.dirt_left, result.is_in_doc);
     return EXIT_SUCCESS;
 
 

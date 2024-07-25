@@ -4,16 +4,10 @@ MyAlgorithm::MyAlgorithm() :
     battery_size(0),
     starting_location(House::Location()),
     max_steps(0),
-    walls_sensor(nullptr),
-    dirt_sensor(nullptr),
-    battery_meter(nullptr)
+    walls_sensor(),
+    dirt_sensor(),
+    battery_meter()
     {}
-
-MyAlgorithm::~MyAlgorithm() {
-    walls_sensor.release();
-    dirt_sensor.release();
-    battery_meter.release();
-}
 
 
 void MyAlgorithm::setMaxSteps(std::size_t maxSteps) {
@@ -21,18 +15,18 @@ void MyAlgorithm::setMaxSteps(std::size_t maxSteps) {
 }
 
 void MyAlgorithm::setWallsSensor(const WallsSensor& wallsSensor) {
-    walls_sensor = std::make_unique<const WallsSensor>(wallsSensor);
+    walls_sensor = &wallsSensor;
 }
 
 void MyAlgorithm::setDirtSensor(const DirtSensor& dirtSensor) {
-    dirt_sensor = std::make_unique<const DirtSensor>(dirtSensor);
+    dirt_sensor = &dirtSensor;
 }
 
 void MyAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
-    battery_meter = std::make_unique<const BatteryMeter>(batteryMeter);
+    battery_meter = &batteryMeter;
 }
 
-Step MyAlgorithm::nextStep() override {
+Step MyAlgorithm::nextStep() {
    
 }
 

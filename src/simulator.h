@@ -10,6 +10,7 @@
 #include "my_algorithm.h"
 
 
+
 class MySimulator {
     size_t battery_size;
     size_t current_battery;
@@ -22,6 +23,7 @@ class MySimulator {
     const BatteryMeterImp battery_meter;
     DirtSensorImp dirt_sensor;
     std::shared_ptr<MyAlgorithm> algo;
+    size_t delta_battery;
 
     void setBatterySize(const size_t battery_size);
     void setCurrestBattery();
@@ -38,10 +40,10 @@ class MySimulator {
 
 
 
-    void move(const Direction direction);
-    void addToHistory();
+    void move(Step step);
+    void addToHistory(Step step);
     void decreaseTotalDirt();
-    void updateHouse();
+    void updateDirtLevel();
 
 
     public:
@@ -51,13 +53,8 @@ class MySimulator {
 
         void setAlgorithm(std::shared_ptr<MyAlgorithm> alg);
 
-        struct vacuum_cleaner_output {
-            size_t battery_level;
-            size_t dirt_left;
-            bool is_in_doc;
-        };
+        void run();
 
-        vacuum_cleaner_output cleanHouse();
         const Path& getPath() const;
         size_t getHistoryLength() const;
 };

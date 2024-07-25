@@ -17,6 +17,6 @@ public:
 
     void setHouse(const std::shared_ptr<House> house);
 
-	bool isWall(Direction d) const;
+	bool isWall(Direction d) const override;
 };
 
