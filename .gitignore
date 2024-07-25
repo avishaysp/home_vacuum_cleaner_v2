@@ -32,3 +32,6 @@
 *.app
 .DS_Store
 .vscode/settings.json
+
+# Logs
+*.log
