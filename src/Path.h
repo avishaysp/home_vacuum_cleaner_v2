@@ -3,12 +3,12 @@
 
 #include <vector>
 #include "house.h"
-#include "enums.h"
+#include "skelaton/enums.h"
 
 class Path {
 public:
     Path();
-    
+
     void addEntry(Step dir);
 
     size_t getLength() const;

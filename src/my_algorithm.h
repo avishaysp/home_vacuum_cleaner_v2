@@ -1,21 +1,21 @@
 #pragma once
 
-#include "abstract_algorithm.h"  
-#include "battery_meter_imp.h"
-#include "walls_sensor_imp.h"
-#include "dirt_sensor_imp.h"
+#include "skelaton/abstract_algorithm.h"
+#include "sensors/battery_meter_imp.h"
+#include "sensors/walls_sensor_imp.h"
+#include "sensors/dirt_sensor_imp.h"
 #include "logger.h"
 
 class MyAlgorithm : public AbstractAlgorithm {
-  
+
   std::size_t max_steps;
 
   const size_t battery_size;
   House::Location starting_location;
 
-  const WallsSensor* walls_sensor;  
-  const DirtSensor* dirt_sensor;    
-  const BatteryMeter* battery_meter; 
+  const WallsSensor* walls_sensor;
+  const DirtSensor* dirt_sensor;
+  const BatteryMeter* battery_meter;
 
 public:
   MyAlgorithm();

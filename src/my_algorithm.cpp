@@ -1,9 +1,9 @@
 #include "my_algorithm.h"
 
-MyAlgorithm::MyAlgorithm() : 
+MyAlgorithm::MyAlgorithm() :
+    max_steps(0),
     battery_size(0),
     starting_location(House::Location()),
-    max_steps(0),
     walls_sensor(),
     dirt_sensor(),
     battery_meter()
@@ -27,6 +27,7 @@ void MyAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
 }
 
 Step MyAlgorithm::nextStep() {
-   
+    std::cout << battery_size;
+    return Step::Stay;
 }
 

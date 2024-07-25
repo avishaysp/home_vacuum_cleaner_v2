@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cerr << "one argument required - inputfile, got " << argc << std::endl;
+        logger.log(ERROR,std::format("one argument required - inputfile, got {}", int(argc - 1)));
         std::exit(EXIT_FAILURE);
     }
 

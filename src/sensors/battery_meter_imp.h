@@ -1,7 +1,7 @@
 #pragma once
 
-#include "battery_meter.h"
-#include "logger.h"
+#include "../skelaton/battery_meter.h"
+#include "../logger.h"
 
 
 

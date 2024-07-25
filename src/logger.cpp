@@ -1,6 +1,7 @@
 #include "logger.h"
 #include <ctime>
 #include <iomanip>
+#include <format>
 
 Logger& Logger::getInstance() {
     static Logger instance;
