@@ -21,7 +21,7 @@ class FileReader {
     std::string trim(const std::string &str) const;
     House::Location parseLocation(const std::string& str) const;
     size_t readArgument(const std::string& str) const;
-    void ParseHouse(std::ifstream &file, House& house) const;
+    void ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const;
 
 public:
     FileReader(const std::string& file_path);
@@ -30,7 +30,7 @@ public:
         size_t max_battery_steps;
         size_t max_num_of_steps;
         House::Location docking_loc;
-        House house_map;
+        std::shared_ptr<House> house_map;
     };
 
     file_reader_output readFile() const;

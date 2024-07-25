@@ -46,6 +46,22 @@ int House::calcTotalDirt() const {
     return sum;
 }
 
+void House::print() const {
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < cols; j++) {
+            Tile tile = mat[i][j];
+            if (tile.isDockingStation()) {
+                std::cout << 'D';
+            } else if (tile.isWall()) {
+                std::cout << 'W';
+            } else {
+                std::cout << tile.getDirtLevel();
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 /* Location */
 
 House::Location::Location(size_t row, size_t col) : row(row), col(col) {}
@@ -98,7 +114,6 @@ void House::Location::print() const {
 
 /* Tile */
 
-// Tile implementation
 House::Tile::Tile(Type type, int dirt_level) : type(type), dirt_level(dirt_level) {}
 House::Tile::Tile() : type(Open), dirt_level(0) {}
 

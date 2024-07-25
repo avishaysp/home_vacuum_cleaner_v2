@@ -61,33 +61,32 @@ House::Location FileReader::parseLocation(const std::string &str) const {
 }
 
 
-void FileReader::ParseHouse(std::ifstream &file, House& house) const {
+void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const {
     if (!file.is_open()) {
         logger.log(ERROR, "error reading house from file");
         std::exit(EXIT_FAILURE);
     }
-    size_t num_of_rows = house.getRowsCount();
-    size_t num_of_cols = house.getColsCount();
+    size_t num_of_rows = house->getRowsCount();
+    size_t num_of_cols = house->getColsCount();
     std::string line;
     size_t row_index = 0;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line) && row_index < num_of_rows) {
         std::vector<char> vec_line(line.begin(), line.end());
-        size_t width = vec_line.size();
-        if (width > num_of_cols) {
-            logger.log(ERROR, std::format("House width in row {} is {}. Larger than Cols argument suplied: {}", row_index, width, num_of_cols));
-            std::exit(EXIT_FAILURE);
-        }
-
-        for (size_t col_index = 0; col_index < vec_line.size(); col_index++) {
+        size_t width = vec_line.size() < num_of_cols ? vec_line.size() : num_of_cols;
+        for (size_t col_index = 0; col_index < width; col_index++) {
             char c  = vec_line[col_index];
             if (c == 'D') {
-                house.getTile(row_index, col_index).setAsDockingStation();
+                house->getTile(row_index, col_index).setAsDockingStation();
+                logger.log(INFO, std::format("Set a Docking Station ({},{})", row_index, col_index));
             } else if (c == 'W') {
-                house.getTile(row_index, col_index).setAsWall();
-            } else if (isdigit(c)) {
-                house.getTile(row_index, col_index).setDirtLevel(int(c - '0'));
+                house->getTile(row_index, col_index).setAsWall();
+                logger.log(INFO, std::format("Set a Wall ({},{})", row_index, col_index));
             } else if (c == ' ') {
-                continue;
+                house->getTile(row_index, col_index).setDirtLevel(0);
+                logger.log(INFO, std::format("Set an empty Tile ({},{})", row_index, col_index));
+            } else if (isdigit(c)) {
+                house->getTile(row_index, col_index).setDirtLevel(int(c - '0'));
+                logger.log(INFO, std::format("Set an dirty Tile ({},{}). Diet level: {}", row_index, col_index, int(c - '0')));
             } else {
                 logger.log(ERROR, std::format("Invalid charecter in house map ({},{})", row_index, col_index));
                 std::exit(EXIT_FAILURE);
@@ -150,8 +149,8 @@ FileReader::file_reader_output FileReader::readFile() const {
         logger.log(ERROR, "Failed to read 5th line with Cols");
         std::exit(EXIT_FAILURE);
     }
-    
-    House house = House(rows_count, cols_count);
+
+    std::shared_ptr<House> house = std::make_shared<House>(rows_count, cols_count);
     ParseHouse(file, house);
     file.close();
 
@@ -175,26 +174,26 @@ void FileWriter::writePath(const Path& path) {
     file.close();
 }
 
-void FileWriter::writeHouse(const House& house) {
-    // std::ofstream file(file_path, std::ios_base::app);
-    // if (!file.is_open()) {
-    //     std::cout << "Could not open file for writing" << std::endl;
-    //     std::exit(EXIT_FAILURE);
-    // }
+// void FileWriter::writeHouse(const House& house) {
+//     // std::ofstream file(file_path, std::ios_base::app);
+//     // if (!file.is_open()) {
+//     //     std::cout << "Could not open file for writing" << std::endl;
+//     //     std::exit(EXIT_FAILURE);
+//     // }
 
-    // size_t rows = house.getRowsCount();
-    // size_t cols = house.getColsCount();
+//     // size_t rows = house.getRowsCount();
+//     // size_t cols = house.getColsCount();
 
-    // for (size_t row = 0; row < rows; row++) {
-    //     FileWriter::printTopWall(file, house, row, cols);
-    //     FileWriter::printDirt(file, house, row, cols);
-    // }
+//     // for (size_t row = 0; row < rows; row++) {
+//     //     FileWriter::printTopWall(file, house, row, cols);
+//     //     FileWriter::printDirt(file, house, row, cols);
+//     // }
 
-    // // Print the bottom wall segment of the last row
-    // printBottomWall(file, house, rows - 1, cols);
+//     // // Print the bottom wall segment of the last row
+//     // printBottomWall(file, house, rows - 1, cols);
 
-    // file.close();
-}
+//     // file.close();
+// }
 
 void FileWriter::writedDirt(size_t dirt) {
     std::ofstream file(file_path, std::ios_base::app);
@@ -231,29 +230,5 @@ void FileWriter::writedAccomplish(size_t dirt, bool isInDock) {
     file.close();
 }
 
-
-void FileWriter::printTopWall(std::ofstream& file, const House& house, size_t row, size_t cols) const {
-    file << "+";
-    for (size_t col = 0; col < cols; col++) {
-        file << (house.getTile(row, col).getNorthWall() ? "-+" : " +");
-    }
-    file << std::endl;
-}
-
-void FileWriter::printDirt(std::ofstream& file, const House& house, size_t row, size_t cols) const {
-    for (size_t col = 0; col < cols; col++) {
-        const auto& tile = house.getTile(row, col);
-        file << (tile.getWestWall() ? "|" : " ") << tile.getDirt();
-    }
-    file << (house.getTile(row, cols - 1).getEastWall() ? "|" : " ") << std::endl;
-}
-
-void FileWriter::printBottomWall(std::ofstream& file, const House& house, size_t row, size_t cols) const {
-    file << "+";
-    for (size_t col = 0; col < cols; col++) {
-        file << (house.getTile(row, col).getSouthWall() ? "-+" : " +");
-    }
-    file << std::endl;
-}
 
 

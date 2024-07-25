@@ -66,6 +66,7 @@ public:
     size_t getColsCount() const;
 
     int calcTotalDirt() const;
+    void print() const;
 
     House(size_t rows, size_t cols);
 
