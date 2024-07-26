@@ -16,7 +16,6 @@ class MySimulator {
     size_t current_battery;
     size_t max_steps;
     std::shared_ptr<House> house;
-    House::Location docking_loc;
     House::Location current_location;
     Path history_path; // verify if needed
     WallsSensorImp walls_sensor;
@@ -29,12 +28,11 @@ class MySimulator {
     void setCurrestBattery();
     void setMaxSteps(const size_t max_steps);
     void setHouse(const std::shared_ptr<House> house);
-    void setDockingStation(const House::Location docking_loc);
     void setCurrentLocation();
     void setWallsSensor();
     void setDirtSensor();
     void setProperties(const size_t max_num_of_steps, const size_t max_battery_steps, 
-                        const std::shared_ptr<House> house_map, const House::Location docking_loc);
+                        const std::shared_ptr<House> house_map);
 
 
 

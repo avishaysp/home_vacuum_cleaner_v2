@@ -29,7 +29,6 @@ public:
     struct file_reader_output {
         size_t max_battery_steps;
         size_t max_num_of_steps;
-        House::Location docking_loc;
         std::shared_ptr<House> house_map;
     };
 

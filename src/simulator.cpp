@@ -1,4 +1,5 @@
 #include "simulator.h"
+#include "live_simulator.h"
 
 
 MySimulator::MySimulator()
@@ -6,7 +7,6 @@ MySimulator::MySimulator()
       current_battery(0),
       max_steps(0),
       house(nullptr),
-      docking_loc(),
       current_location(),
       history_path(),
       walls_sensor(current_location),
@@ -18,7 +18,7 @@ MySimulator::MySimulator()
 void MySimulator::readHouseFile(const std::string input_file_path) {
     FileReader fr(input_file_path);
     FileReader::file_reader_output args = fr.readFile();
-    setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map, args.docking_loc);
+    setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
 }
 
 //setters
@@ -39,12 +39,9 @@ void MySimulator::setHouse(const std::shared_ptr<House> house) {
     this->house = house;
 }
 
-void MySimulator::setDockingStation(const House::Location docking_loc) {
-    this->docking_loc = docking_loc;
-}
-
+//Todo
 void MySimulator::setCurrentLocation() {
-    this->current_location = docking_loc;
+    this->current_location = house->getDockingStation();
 }
 
 void MySimulator::setWallsSensor() {
@@ -64,13 +61,12 @@ void MySimulator::setAlgorithm(std::shared_ptr<MyAlgorithm> alg) {
 }
 
 void MySimulator::setProperties(const size_t max_num_of_steps, const size_t max_battery_steps, 
-                        const std::shared_ptr<House> house_map, const House::Location docking_loc) {
-    
+                        const std::shared_ptr<House> house_map) {
+        
     setBatterySize(max_battery_steps);
     setCurrestBattery();
     setMaxSteps(max_num_of_steps);
     setHouse(house_map);
-    setDockingStation(docking_loc);
     setCurrentLocation();
     setWallsSensor();
     setDirtSensor();
@@ -93,11 +89,11 @@ size_t MySimulator::getHistoryLength() const {
 
 void MySimulator::run() {
     for (size_t i = 0; i < max_steps; ++i) {
-
         Step step = algo->nextStep();
 
         //Stay in docking station
-        if ((step == Step::Stay) && (current_location == docking_loc)) {
+        if ((step == Step::Stay) && (current_location == house->getDockingStation())) {
+            updateDirtLevel();
             current_battery += delta_battery; 
         }
 
@@ -117,13 +113,14 @@ void MySimulator::run() {
         else {
             
         }
-
         addToHistory(step);
+        live_simulator.simulate(*house, current_location);
+
     }
 }
 
 void MySimulator::updateDirtLevel() {
-    house->getTile(current_location).decreaseOneDirt();
+    (house->getTile(current_location)).decreaseOneDirt();
 }
 
 void MySimulator::move(Step step) {

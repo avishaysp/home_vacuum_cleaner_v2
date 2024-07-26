@@ -34,6 +34,14 @@ size_t House::getColsCount() const {
     return cols;
 }
 
+House::Location House::getDockingStation() const {
+    return docking_station;
+}
+
+void House::setDockingStation(House::Location docking_loc) {
+    docking_station = docking_loc;
+}
+
 int House::calcTotalDirt() const {
     int sum = 0;
     for (size_t i = 0; i < rows; i++) {
@@ -61,6 +69,7 @@ void House::print() const {
         std::cout << std::endl;
     }
 }
+
 
 /* Location */
 

@@ -77,6 +77,7 @@ void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) c
             char c  = vec_line[col_index];
             if (c == 'D') {
                 house->getTile(row_index, col_index).setAsDockingStation();
+                house->setDockingStation(House::Location(row_index, col_index));
                 logger.log(INFO, std::format("Set a Docking Station ({},{})", row_index, col_index));
             } else if (c == 'W') {
                 house->getTile(row_index, col_index).setAsWall();
@@ -106,7 +107,6 @@ FileReader::file_reader_output FileReader::readFile() const {
     size_t max_battery_steps;
     size_t rows_count;
     size_t cols_count;
-    House::Location docking_loc;
 
     std::ifstream file(file_path);
 
@@ -154,7 +154,7 @@ FileReader::file_reader_output FileReader::readFile() const {
     ParseHouse(file, house);
     file.close();
 
-    return {max_battery_steps, max_num_of_steps, docking_loc, house};
+    return {max_battery_steps, max_num_of_steps, house};
 }
 
 FileWriter::FileWriter(const std::string& file_path) : file_path(file_path) {
