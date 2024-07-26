@@ -65,6 +65,9 @@ public:
     size_t getRowsCount() const;
     size_t getColsCount() const;
 
+    Location getDockingStation() const;
+    void setDockingStation(Location docking_loc); 
+
     int calcTotalDirt() const;
     void print() const;
 
@@ -74,4 +77,6 @@ private:
     std::vector<std::vector<House::Tile>> mat;
     size_t rows;
     size_t cols;
+    Location docking_station;
+
 };
