@@ -10,35 +10,15 @@ LiveSimulator& LiveSimulator::getInstance() {
     return instance;
 }
 
+LiveSimulator::~LiveSimulator() {}
+
 void LiveSimulator::simulate(const House& house, const House::Location& curr_location) {
-    logger.log(INFO, "Start waiting for 1 second");
+    logger.log(INFO, "Start waiting for 0.5 second");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    openSimulatorFile();
-    if (simulatorStream.is_open()) {
-        logger.log(INFO, "Printing house");
-        printHouseForSimulator(house, curr_location);
-        simulatorStream.flush();
-    } else {
-        logger.log(ERROR, "Unable to write to simulator file");
-        std::cerr << "Unable to write to log file: " << simulatorFile << std::endl;
-    }
+    logger.log(INFO, "Printing house");
+    printHouseForSimulator(house, curr_location);
 }
 
-LiveSimulator::~LiveSimulator() {
-    if (simulatorStream.is_open()) {
-        simulatorStream.close();
-    }
-}
-
-void LiveSimulator::openSimulatorFile() {
-    simulatorStream.open(simulatorFile, std::ios_base::out | std::ios_base::trunc);
-    if (!simulatorStream.is_open()) {
-        logger.log(ERROR, "Failed to open simulator file");
-        std::cerr << "Failed to open log file: " << simulatorFile << std::endl;
-    } else {
-        simulatorStream.rdbuf()->pubsetbuf(0, 0);
-    }
-}
 
 void LiveSimulator::printHouseForSimulator(const House& house, const House::Location& current_loc) {
     std::cout << "\033[2J\033[1;1H";
