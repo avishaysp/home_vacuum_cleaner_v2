@@ -1,3 +1,4 @@
+// speedom_algorithm.h
 #pragma once
 
 #include <unordered_map>
@@ -18,7 +19,27 @@ class SpeedomAlgorithm : public AbstractAlgorithm {
         };
         std::unordered_map<House::Location, tile_stats> internal_graph;
     public:
-        
+
+    };
+
+    class AlgorithmLocation : public LocationBase<int> {
+    public:
+        AlgorithmLocation();
+        AlgorithmLocation(int row, int col);
+
+        // Copy Constructor
+        AlgorithmLocation(const AlgorithmLocation& other);
+
+        // Copy Assignment Operator
+        AlgorithmLocation& operator=(const AlgorithmLocation& other);
+
+        // Move Constructor
+        AlgorithmLocation(AlgorithmLocation&& other) noexcept;
+
+        // Move Assignment Operator
+        AlgorithmLocation& operator=(AlgorithmLocation&& other) noexcept;
+
+        ~AlgorithmLocation();
     };
 
 
@@ -35,6 +56,7 @@ public:
     SpeedomAlgorithm();
 
     void setMaxSteps(size_t max_steps) override;
+    void setDockingLocation(House::Location loc);
     void setWallsSensor(const WallsSensor&) override;
     void setDirtSensor(const DirtSensor&) override;
     void setBatteryMeter(const BatteryMeter&) override;

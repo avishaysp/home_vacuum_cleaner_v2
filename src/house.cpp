@@ -73,53 +73,41 @@ void House::print() const {
 
 /* Location */
 
-House::Location::Location(size_t row, size_t col) : row(row), col(col) {}
-House::Location::Location() : row(0), col(0) {}
+House::Location::Location() : LocationBase() {}
+House::Location::Location(size_t row, size_t col) : LocationBase(row, col) {}
 
+// Copy Constructor
+House::Location::Location(const Location& other) : LocationBase(other.row, other.col) {}
 
-// Getters for Location
-size_t House::Location::getRow() const {
-    return row;
+// Copy Assignment Operator
+House::Location& House::Location::operator=(const Location& other) {
+    if (this == &other) {
+        return *this; // handle self assignment
+    }
+    row = other.row;
+    col = other.col;
+    return *this;
 }
 
-size_t House::Location::getCol() const {
-    return col;
+// Move Constructor
+House::Location::Location(Location&& other) noexcept : LocationBase(other.row, other.col) {
+    other.row = 0;
+    other.col = 0;
 }
 
-// Setters for Location
-void House::Location::setRow(size_t row) {
-    this->row = row;
+// Move Assignment Operator
+House::Location& House::Location::operator=(Location&& other) noexcept {
+    if (this == &other) {
+        return *this;
+    }
+    row = other.row;
+    col = other.col;
+    other.row = 0;
+    other.col = 0;
+    return *this;
 }
 
-void House::Location::setCol(size_t col) {
-    this->col = col;
-}
-
-void House::Location::setBoth(size_t row, size_t col) {
-    this->row = row;
-    this->col = col;
-}
-
-// Overloaded operators for Location
-bool House::Location::operator==(const House::Location& other) const {
-    return (row == other.row) && (col == other.col);
-}
-
-bool House::Location::operator!=(const House::Location& other) const {
-    return !(*this == other);
-}
-
-std::string House::Location::toString() const {
-    return std::format("({}|{})",this->row, this->col);
-}
-
-std::ostream& operator<<(std::ostream& os, const House::Location& loc) {
-    return os << std::format("({}|{})", loc.row, loc.col);
-}
-
-void House::Location::print() const {
-    std::cout << "(" << (this->row) << "|" << (this->col) << ")" << std::endl;
-}
+House::Location::~Location() {}
 
 /* Tile */
 

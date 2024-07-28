@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "logger.h"
+#include "location_base.h"
 
 class House {
 
@@ -31,64 +32,26 @@ public:
     };
 
 
-    class Location {
-        size_t row;
-        size_t col;
-
+    class Location : public LocationBase<size_t> {
     public:
         // Constructors
         Location();
         Location(size_t row, size_t col);
 
         // Copy Constructor
-        Location(const Location& other) : row(other.row), col(other.col) {}
+        Location(const Location& other);
 
         // Copy Assignment Operator
-        Location& operator=(const Location& other) {
-            if (this == &other) {
-                return *this; // handle self assignment
-            }
-            row = other.row;
-            col = other.col;
-            return *this;
-        }
+        Location& operator=(const Location& other);
 
         // Move Constructor
-        Location(Location&& other) noexcept : row(other.row), col(other.col) {
-            other.row = 0;
-            other.col = 0;
-        }
+        Location(Location&& other) noexcept;
 
         // Move Assignment Operator
-        Location& operator=(Location&& other) noexcept {
-            if (this == &other) {
-                return *this; // handle self assignment
-            }
-            row = other.row;
-            col = other.col;
-            other.row = 0;
-            other.col = 0;
-            return *this;
-        }
+        Location& operator=(Location&& other) noexcept;
 
         // Destructor
-        ~Location() {}
-
-        // Getters
-        size_t getRow() const;
-        size_t getCol() const;
-
-        // Setters
-        void setRow(size_t row);
-        void setCol(size_t col);
-        void setBoth(size_t row, size_t col);
-
-        bool operator==(const Location& other) const;
-        bool operator!=(const Location& other) const;
-
-        std::string toString() const;
-        friend std::ostream& operator<<(std::ostream& os, const Location& loc);
-        void print() const;
+        ~Location();
     };
 
     Tile& getTile(Location loc);
