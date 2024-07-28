@@ -1,6 +1,11 @@
 // speedom_algorithm.cpp
 #include "speedom_algorithm.h"
 
+#include <vector>
+#include <queue>
+#include <unordered_set>
+
+
 SpeedomAlgorithm::SpeedomAlgorithm() :
     max_steps(0),
     battery_size(0),
@@ -75,3 +80,25 @@ SpeedomAlgorithm::AlgorithmLocation& SpeedomAlgorithm::AlgorithmLocation::operat
 }
 
 SpeedomAlgorithm::AlgorithmLocation::~AlgorithmLocation() {}
+
+Step InternalHouse::bfs() {
+     // BFS of current node to all other nodes
+    std::queue<SpeedomAlgorithm::Location> q;
+    std::unordered_set<SpeedomAlgorithm::Location> bfsVisited;
+    
+
+    q.push(current_location);
+    bfsVisited.insert(current_location);
+
+    while (!q.empty()) {
+        SpeedomAlgorithm::Location current = q.front();
+        q.pop();
+
+        for (SpeedomAlgorithm::Location neighbor : internal_graph) {
+            if (visited.find(neighbor) == visited.end()) {
+                q.push(neighbor);
+                visited.insert(neighbor);
+            }
+        }
+    }
+}

@@ -14,11 +14,15 @@ class SpeedomAlgorithm : public AbstractAlgorithm {
         struct tile_stats {
             size_t dirt_level;
             bool visited;
-            bool rechable;
+            size_t distance_from_current;
+            SpeedomAlgorithm::Location father_for_node;
+            size_t distance_from_docking_station;
+            SpeedomAlgorithm::Location father_for_docking;
             std::vector<House::Location> neighbors;
         };
         std::unordered_map<House::Location, tile_stats> internal_graph;
     public:
+        Step bfs();
 
     };
 
@@ -46,7 +50,9 @@ class SpeedomAlgorithm : public AbstractAlgorithm {
     std::size_t max_steps;
 
     const size_t battery_size;
-    House::Location starting_location;
+    SpeedomAlgorithm::Location starting_location;
+
+    SpeedomAlgorithm::Location current_location;
 
     const WallsSensor* walls_sensor;
     const DirtSensor* dirt_sensor;
