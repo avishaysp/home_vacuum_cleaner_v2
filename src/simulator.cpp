@@ -2,7 +2,7 @@
 #include "live_simulator.h"
 
 
-MySimulator::MySimulator()
+Simulator::Simulator()
     : battery_size(0),
       current_battery(0),
       max_steps(0),
@@ -15,7 +15,7 @@ MySimulator::MySimulator()
       algo(nullptr),
       delta_battery(0) {}
 
-void MySimulator::readHouseFile(const std::string input_file_path) {
+void Simulator::readHouseFile(const std::string input_file_path) {
     FileReader fr(input_file_path);
     FileReader::file_reader_output args = fr.readFile();
     setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
@@ -23,36 +23,36 @@ void MySimulator::readHouseFile(const std::string input_file_path) {
 
 //setters
 
-void MySimulator::setBatterySize(const size_t battery_size) {
+void Simulator::setBatterySize(const size_t battery_size) {
     this->battery_size = battery_size * 100;
 }
 
-void MySimulator::setCurrestBattery() {
+void Simulator::setCurrestBattery() {
     current_battery = battery_size;
 }
 
-void MySimulator::setMaxSteps(const size_t max_steps) {
+void Simulator::setMaxSteps(const size_t max_steps) {
     this->max_steps = max_steps;
 }
 
-void MySimulator::setHouse(const std::shared_ptr<House> house) {
+void Simulator::setHouse(const std::shared_ptr<House> house) {
     this->house = house;
 }
 
 //Todo
-void MySimulator::setCurrentLocation() {
+void Simulator::setCurrentLocation() {
     this->current_location = house->getDockingStation();
 }
 
-void MySimulator::setWallsSensor() {
+void Simulator::setWallsSensor() {
     walls_sensor.setHouse(house);
 }
 
-void MySimulator::setDirtSensor() {
+void Simulator::setDirtSensor() {
     dirt_sensor.setHouse(house);
 }
 
-void MySimulator::setAlgorithm(std::shared_ptr<MyAlgorithm> alg) {
+void Simulator::setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg) {
     alg->setWallsSensor(walls_sensor);
     alg->setDirtSensor(dirt_sensor);
     alg->setBatteryMeter(battery_meter);
@@ -60,9 +60,9 @@ void MySimulator::setAlgorithm(std::shared_ptr<MyAlgorithm> alg) {
     algo = alg;
 }
 
-void MySimulator::setProperties(const size_t max_num_of_steps, const size_t max_battery_steps, 
+void Simulator::setProperties(const size_t max_num_of_steps, const size_t max_battery_steps,
                         const std::shared_ptr<House> house_map) {
-        
+
     setBatterySize(max_battery_steps);
     setCurrestBattery();
     setMaxSteps(max_num_of_steps);
@@ -74,27 +74,27 @@ void MySimulator::setProperties(const size_t max_num_of_steps, const size_t max_
 
 }
 
-void MySimulator::addToHistory(Step step) {
+void Simulator::addToHistory(Step step) {
     history_path.addEntry(step);
 }
 
-const Path& MySimulator::getPath() const {
+const Path& Simulator::getPath() const {
     return history_path;
 }
 
-size_t MySimulator::getHistoryLength() const {
+size_t Simulator::getHistoryLength() const {
     return history_path.getLength();
 }
 
 
-void MySimulator::run() {
+void Simulator::run() {
     for (size_t i = 0; i < max_steps; ++i) {
         Step step = algo->nextStep();
 
         //Stay in docking station
         if ((step == Step::Stay) && (current_location == house->getDockingStation())) {
             updateDirtLevel();
-            current_battery += delta_battery; 
+            current_battery += delta_battery;
         }
 
         //Stay and clean
@@ -111,7 +111,7 @@ void MySimulator::run() {
 
         //finish running
         else {
-            
+
         }
         addToHistory(step);
         live_simulator.simulate(*house, current_location);
@@ -119,11 +119,11 @@ void MySimulator::run() {
     }
 }
 
-void MySimulator::updateDirtLevel() {
+void Simulator::updateDirtLevel() {
     (house->getTile(current_location)).decreaseOneDirt();
 }
 
-void MySimulator::move(Step step) {
+void Simulator::move(Step step) {
     switch (step)
         {
         case Step::North:

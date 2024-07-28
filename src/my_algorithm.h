@@ -6,7 +6,7 @@
 #include "sensors/dirt_sensor_imp.h"
 #include "logger.h"
 
-class MyAlgorithm : public AbstractAlgorithm {
+class SpeedomAlgorithm : public AbstractAlgorithm {
 
   std::size_t max_steps;
 
@@ -18,7 +18,7 @@ class MyAlgorithm : public AbstractAlgorithm {
   const BatteryMeter* battery_meter;
 
 public:
-  MyAlgorithm();
+  SpeedomAlgorithm();
 
   void setMaxSteps(size_t max_steps) override;
   void setWallsSensor(const WallsSensor&) override;

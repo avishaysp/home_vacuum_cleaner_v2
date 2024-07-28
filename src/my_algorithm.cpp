@@ -1,6 +1,6 @@
 #include "my_algorithm.h"
 
-MyAlgorithm::MyAlgorithm() :
+SpeedomAlgorithm::SpeedomAlgorithm() :
     max_steps(0),
     battery_size(0),
     starting_location(House::Location()),
@@ -10,23 +10,23 @@ MyAlgorithm::MyAlgorithm() :
     {}
 
 
-void MyAlgorithm::setMaxSteps(std::size_t maxSteps) {
+void SpeedomAlgorithm::setMaxSteps(std::size_t maxSteps) {
     max_steps = maxSteps;
 }
 
-void MyAlgorithm::setWallsSensor(const WallsSensor& wallsSensor) {
+void SpeedomAlgorithm::setWallsSensor(const WallsSensor& wallsSensor) {
     walls_sensor = &wallsSensor;
 }
 
-void MyAlgorithm::setDirtSensor(const DirtSensor& dirtSensor) {
+void SpeedomAlgorithm::setDirtSensor(const DirtSensor& dirtSensor) {
     dirt_sensor = &dirtSensor;
 }
 
-void MyAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
+void SpeedomAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
     battery_meter = &batteryMeter;
 }
 
-Step MyAlgorithm::nextStep() {
+Step SpeedomAlgorithm::nextStep() {
     std::cout << battery_size << std::endl;
     return Step::East;
 }

@@ -14,10 +14,10 @@ int main(int argc, char* argv[]) {
     logger.log(INFO, "~~~~~~~~~~~~~~~~~~~~~~~ Vacuum Cleaner ~~~~~~~~~~~~~~~~~~~~~~~");
     std::string output_file_path = "output_" + input_file_path;
 
-    MySimulator simulator;
+    Simulator simulator;
     simulator.readHouseFile(input_file_path);
 
-    simulator.setAlgorithm(std::make_shared<MyAlgorithm>());
+    simulator.setAlgorithm(std::make_shared<SpeedomAlgorithm>());
     simulator.run();
 
     // FileWriter fw(output_file_path);

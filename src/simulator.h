@@ -11,7 +11,7 @@
 
 
 
-class MySimulator {
+class Simulator {
     size_t battery_size;
     size_t current_battery;
     size_t max_steps;
@@ -21,7 +21,7 @@ class MySimulator {
     WallsSensorImp walls_sensor;
     const BatteryMeterImp battery_meter;
     DirtSensorImp dirt_sensor;
-    std::shared_ptr<MyAlgorithm> algo;
+    std::shared_ptr<SpeedomAlgorithm> algo;
     size_t delta_battery;
 
     void setBatterySize(const size_t battery_size);
@@ -31,7 +31,7 @@ class MySimulator {
     void setCurrentLocation();
     void setWallsSensor();
     void setDirtSensor();
-    void setProperties(const size_t max_num_of_steps, const size_t max_battery_steps, 
+    void setProperties(const size_t max_num_of_steps, const size_t max_battery_steps,
                         const std::shared_ptr<House> house_map);
 
 
@@ -45,11 +45,11 @@ class MySimulator {
 
 
     public:
-        MySimulator();
+        Simulator();
 
         void readHouseFile(const std::string input_file_path);
 
-        void setAlgorithm(std::shared_ptr<MyAlgorithm> alg);
+        void setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg);
 
         void run();
 
