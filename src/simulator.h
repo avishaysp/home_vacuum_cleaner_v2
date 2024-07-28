@@ -7,7 +7,7 @@
 #include "sensors/dirt_sensor_imp.h"
 #include "sensors/battery_meter_imp.h"
 #include "Path.h"
-#include "my_algorithm.h"
+#include "speedom_algorithm.h"
 
 
 

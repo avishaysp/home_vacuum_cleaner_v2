@@ -1,4 +1,4 @@
-#include "my_algorithm.h"
+#include "speedom_algorithm.h"
 
 SpeedomAlgorithm::SpeedomAlgorithm() :
     max_steps(0),

@@ -2,7 +2,7 @@
 #include "logger.h"
 #include "io_handling.h"
 #include "simulator.h"
-#include "my_algorithm.h"
+#include "speedom_algorithm.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
