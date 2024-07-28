@@ -40,6 +40,40 @@ public:
         Location();
         Location(size_t row, size_t col);
 
+        // Copy Constructor
+        Location(const Location& other) : row(other.row), col(other.col) {}
+
+        // Copy Assignment Operator
+        Location& operator=(const Location& other) {
+            if (this == &other) {
+                return *this; // handle self assignment
+            }
+            row = other.row;
+            col = other.col;
+            return *this;
+        }
+
+        // Move Constructor
+        Location(Location&& other) noexcept : row(other.row), col(other.col) {
+            other.row = 0;
+            other.col = 0;
+        }
+
+        // Move Assignment Operator
+        Location& operator=(Location&& other) noexcept {
+            if (this == &other) {
+                return *this; // handle self assignment
+            }
+            row = other.row;
+            col = other.col;
+            other.row = 0;
+            other.col = 0;
+            return *this;
+        }
+
+        // Destructor
+        ~Location() {}
+
         // Getters
         size_t getRow() const;
         size_t getCol() const;
@@ -66,7 +100,7 @@ public:
     size_t getColsCount() const;
 
     Location getDockingStation() const;
-    void setDockingStation(Location docking_loc); 
+    void setDockingStation(Location docking_loc);
 
     int calcTotalDirt() const;
     void print() const;
