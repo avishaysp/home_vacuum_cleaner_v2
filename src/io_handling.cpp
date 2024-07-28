@@ -18,7 +18,6 @@ size_t FileReader::readArgument(const std::string &str) const {
     std::vector<std::string> splits = split(str, '=');
     if (splits.size() != 2) {
         logger.log(ERROR, "Invalid format: " + str);
-        std::exit(EXIT_FAILURE);
     }
 
     std::string str_arg = trim(splits[1]);
@@ -31,10 +30,8 @@ size_t FileReader::strToSize_t(const std::string &str) const {
         return res;
     } catch (const std::invalid_argument& e) {
         logger.log(ERROR, "Invalid argument: " + std::string(e.what()));
-        std::exit(EXIT_FAILURE);
     } catch (const std::out_of_range& e) {
         logger.log(ERROR, "Out of range: " + std::string(e.what()));
-        std::exit(EXIT_FAILURE);
     }
 }
 
@@ -64,7 +61,6 @@ House::Location FileReader::parseLocation(const std::string &str) const {
 void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const {
     if (!file.is_open()) {
         logger.log(ERROR, "error reading house from file");
-        std::exit(EXIT_FAILURE);
     }
     size_t num_of_rows = house->getRowsCount();
     size_t num_of_cols = house->getColsCount();
@@ -90,7 +86,6 @@ void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) c
                 logger.log(INFO, std::format("Set an dirty Tile ({},{}). Dirt level: {}", row_index, col_index, int(c - '0')));
             } else {
                 logger.log(ERROR, std::format("Invalid charecter in house map ({},{})", row_index, col_index));
-                std::exit(EXIT_FAILURE);
             }
         }
         row_index++;
@@ -112,42 +107,36 @@ FileReader::file_reader_output FileReader::readFile() const {
 
     if (!file.is_open()) {
         logger.log(ERROR, "Failed to open the file: " + file_path);
-        std::exit(EXIT_FAILURE);
     }
 
     std::string line;
 
     if (!std::getline(file, line)) {
         logger.log(ERROR, "Failed to read first line of input file");
-        std::exit(EXIT_FAILURE);
     }
 
     if (std::getline(file, line)) {
         max_num_of_steps = readArgument(line);
     } else {
         logger.log(ERROR, "Failed to read 2nd line with MaxSteps");
-        std::exit(EXIT_FAILURE);
     }
 
     if (std::getline(file, line)) {
         max_battery_steps = readArgument(line);
     } else {
         logger.log(ERROR, "Failed to read 3rd line with MaxBattery");
-        std::exit(EXIT_FAILURE);
     }
 
     if (std::getline(file, line)) {
         rows_count = readArgument(line);
     } else {
         logger.log(ERROR, "Failed to read 4th line with Rows");
-        std::exit(EXIT_FAILURE);
     }
 
     if (std::getline(file, line)) {
         cols_count = readArgument(line);
     } else {
         logger.log(ERROR, "Failed to read 5th line with Cols");
-        std::exit(EXIT_FAILURE);
     }
 
     std::shared_ptr<House> house = std::make_shared<House>(rows_count, cols_count);
@@ -166,7 +155,6 @@ void FileWriter::writePath(const Path& path) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
-        std::exit(EXIT_FAILURE);
     }
     file << path;
     file << "Total number of steps performed: " << (path.getLength() - 1) << std::endl;
@@ -178,7 +166,6 @@ void FileWriter::writePath(const Path& path) {
 //     // std::ofstream file(file_path, std::ios_base::app);
 //     // if (!file.is_open()) {
 //     //     std::cout << "Could not open file for writing" << std::endl;
-//     //     std::exit(EXIT_FAILURE);
 //     // }
 
 //     // size_t rows = house.getRowsCount();
@@ -199,7 +186,6 @@ void FileWriter::writedDirt(size_t dirt) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
-        std::exit(EXIT_FAILURE);
     }
     file << "Final amount of dirt: " << dirt << std::endl;
     file.close();
@@ -209,7 +195,6 @@ void FileWriter::writedBat(size_t battery) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
-        std::exit(EXIT_FAILURE);
     }
     file << "Battery level on finish: " << battery << std::endl;
     file << (battery > 0 ? "Battery was not exhausted" :  "Battery is dead") << std::endl;
@@ -220,7 +205,6 @@ void FileWriter::writedAccomplish(size_t dirt, bool isInDock) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
-        std::exit(EXIT_FAILURE);
     }
     if (dirt == 0 && isInDock) {
         file << "Misson Accomplished!" << std::endl;

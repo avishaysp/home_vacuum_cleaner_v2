@@ -19,16 +19,15 @@ Step Path::popStep() {
         vec.pop_back();
         return last;
     }
-    std::cerr << "Popped the first elem in the Path. Big No No." << std::endl;
-    std::exit(EXIT_FAILURE);
+    logger.log(ERROR, "Popped the first elem in the Path. Big No No.");
+
 }
 
 Step Path::topStep() const {
     if (!vec.empty()) {
         return vec.back();
     }
-    std::cerr << "Popped the first elem in the Path. Big No No." << std::endl;
-    std::exit(EXIT_FAILURE);
+    logger.log(ERROR, "Popped the first elem in the Path. Big No No.");
 }
 
 void Path::cutPath(const size_t idx){

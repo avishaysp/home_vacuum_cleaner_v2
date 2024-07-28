@@ -20,6 +20,9 @@ void Logger::log(LogLevel level, const std::string& message) {
     } else {
         std::cerr << "Unable to write to log file: " << logFile << std::endl;
     }
+    if (level == ERROR) {
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 Logger::~Logger() {
