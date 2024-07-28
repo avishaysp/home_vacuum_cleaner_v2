@@ -93,7 +93,9 @@ void Simulator::run() {
 
         //Stay in docking station
         if ((step == Step::Stay) && (current_location == house->getDockingStation())) {
-            updateDirtLevel();
+            if (current_battery == battery_size) {
+                logger.log(ERROR, "Stayed in docking station even though battary is full. Inappropriate behavior.");
+            }
             current_battery += delta_battery;
         }
 
@@ -111,7 +113,7 @@ void Simulator::run() {
 
         //finish running
         else {
-
+            
         }
         addToHistory(step);
         live_simulator.simulate(*house, current_location);
@@ -120,27 +122,54 @@ void Simulator::run() {
 }
 
 void Simulator::updateDirtLevel() {
+    if (house->getTile(current_location).getDirtLevel() == 0) {
+        logger.log(ERROR, "Stayed in a floor tile that is already clean. Inappropriate behavior.")
+    }
     (house->getTile(current_location)).decreaseOneDirt();
 }
 
 void Simulator::move(Step step) {
-    switch (step)
-        {
+    size_t rows = house->getRowsCount();
+    size_t cols = house->getColsCount();
+    size_t curr_row = current_location.getRow();
+    size_t curr_col = current_location.getCol();
+    House::Location next_loc;
+    switch (step) {
         case Step::North:
-            current_location.setBoth(current_location.getRow() - 1, current_location.getCol());
+            int next_row = curr_row - 1;
+            if (next_row < 0) {
+                logger.log(ERROR, "Tried to move North from northest row");
+            }
+            next_loc = House::Location(next_row, curr_col);
             break;
         case Step::South:
-            current_location.setBoth(current_location.getRow() + 1, current_location.getCol());
+            int next_row = curr_row + 1;
+            if (next_row >= rows) {
+                logger.log(ERROR, "Tried to move South from southest row");
+            }
+            next_loc = House::Location(next_row, curr_col);
             break;
         case Step::East:
-            current_location.setBoth(current_location.getRow(), current_location.getCol() + 1);
+            int next_col = curr_col + 1;
+            if (next_col >= cols) {
+                logger.log(ERROR, "Tried to move East from most east col");
+            }
+            next_loc = House::Location(curr_row, next_col);
             break;
         case Step::West:
-            current_location.setBoth(current_location.getRow(), current_location.getCol() - 1);
+            int next_col = curr_col - 1;
+            if (next_col < 0) {
+                logger.log(ERROR, "Tried to move West from most west col");
+            }
+            next_loc = House::Location(curr_row, next_col);
             break;
         default:
             break;
-        }
+    }
+    if (house->getTile(next_loc).isWall()) {
+        logger.log(ERROR, "Tried to move West from most west col");
+    }
+    current_location = next_loc;
 }
 
 
