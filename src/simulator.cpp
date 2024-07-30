@@ -96,7 +96,8 @@ void Simulator::run() {
             if (current_battery == battery_size) {
                 logger.log(ERROR, "Stayed in docking station even though battary is full. Inappropriate behavior.");
             }
-            current_battery += delta_battery;
+
+            current_battery = std::max(current_battery + delta_battery, battery_size);
         }
 
         //Stay and clean
@@ -123,7 +124,7 @@ void Simulator::run() {
 
 void Simulator::updateDirtLevel() {
     if (house->getTile(current_location).getDirtLevel() == 0) {
-        logger.log(ERROR, "Stayed in a floor tile that is already clean. Inappropriate behavior.")
+        logger.log(ERROR, "Stayed in a floor tile that is already clean. Inappropriate behavior.");
     }
     (house->getTile(current_location)).decreaseOneDirt();
 }

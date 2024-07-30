@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include "house.h"
 #include "io_handling.h"
 #include "sensors/walls_sensor_imp.h"
