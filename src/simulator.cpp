@@ -99,39 +99,39 @@ size_t Simulator::getHistoryLength() const {
 void Simulator::run() {
     Step step;
     Status final_status = Status::WORKING;
+    logger.log(INFO, "Simulator | Start cleaning house");
     for (size_t i = 0; i < max_steps; ++i) {
 
         if ((current_location == house->getDockingStation()) && current_battery <= 0) {
-            logger.log(FATAL, "Battery level is empty, Can not continue cleaning");
+            logger.log(FATAL, "Simulator | Battery level is empty, Can not continue cleaning");
             final_status = Status::DEAD;
             break;
         }
 
         step = algo->nextStep();
 
-        //Stay in docking station
         if ((step == Step::Stay) && (current_location == house->getDockingStation())) {
             if (current_battery == battery_size) {
-                logger.log(FATAL, "Stayed in docking station even though battary is full. Inappropriate behavior.");
+                logger.log(FATAL, "Simulator | Stayed in docking station even though battary is full. Inappropriate behavior.");
             }
 
             current_battery = std::max(current_battery + delta_battery, battery_size);
+            logger.log(INFO, std::format("Simulator | Ney battery after charging {}", current_battery));
         }
 
-        //Stay and clean
         else if (step == Step::Stay) {
+            logger.log(INFO, "Simulator | Stay and clean");
             updateDirtLevel();
             current_battery -= 100;
         }
 
-        //Move to another location
         else if (step != Step::Finish) {
             move(step);
             current_battery -= 100;
         }
 
-        //finish running
         else {
+            logger.log(INFO, "Simulator | Simulator successfully finished running ");
             addToHistory(step);
             live_simulator.simulate(*house, current_location, step);
             final_status = Status::FINISH;
@@ -141,6 +141,8 @@ void Simulator::run() {
         addToHistory(step);
         live_simulator.simulate(*house, current_location, step);
     }
+
+    logger.log(INFO, "Simulator | Prepering output file");
 
     writeToOutputFile(final_status);
 }
@@ -195,6 +197,7 @@ void Simulator::move(Step step) {
     if (house->getTile(next_loc).isWall()) {
         logger.log(FATAL, "Tried to move West from most west col");
     }
+    logger.log(INFO, std::format("Simulator | Move to location {}", next_loc.toString()));
     current_location = next_loc;
 }
 

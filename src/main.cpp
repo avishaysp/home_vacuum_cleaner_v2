@@ -18,11 +18,6 @@ int main(int argc, char* argv[]) {
     simulator.setAlgorithm(std::make_shared<SpeedomAlgorithm>());
     simulator.run();
 
-    // FileWriter fw(output_file_path);
-    // fw.writePath(vacuumCleaner.getPath());
-    // fw.writedDirt(result.dirt_left);
-    // fw.writedBat(result.battery_level);
-    // fw.writedAccomplish(result.dirt_left, result.is_in_doc);
     return EXIT_SUCCESS;
 
 

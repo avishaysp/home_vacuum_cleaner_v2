@@ -69,7 +69,8 @@ private:
 
         InternalHouse(Location& start_loc, Location& curr_loc)
             : starting_location(start_loc), current_location(curr_loc) {
-                internal_graph.at(start_loc) =
+                logger.log(INFO, "InternalHouse C'tor");
+                internal_graph[start_loc] =
                 {
                     0, false, 0, std::nullopt, 0, std::nullopt, std::vector<Location>()
                 };

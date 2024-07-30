@@ -54,9 +54,9 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
             }
             if ((i == curr_row) && (j == curr_col - 1)) {
                 if (step == Step::Stay){
-                    std::cout << "W<";
+                    std::cout << "<";
                 } else {
-                    std::cout << "W[";
+                    std::cout << "[";
                 }
             } 
             else if ((i == curr_row) && (j == curr_col)) {
