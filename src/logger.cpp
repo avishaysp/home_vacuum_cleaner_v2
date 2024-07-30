@@ -20,7 +20,7 @@ void Logger::log(LogLevel level, const std::string& message) {
     } else {
         std::cerr << "Unable to write to log file: " << logFile << std::endl;
     }
-    if (level == ERROR) {
+    if (level == FATAL) {
         std::exit(EXIT_FAILURE);
     }
 }
@@ -49,8 +49,8 @@ std::string Logger::getLogLevelString(LogLevel level) {
             return "INFO";
         case WARNING:
             return "WARNING";
-        case ERROR:
-            return "ERROR";
+        case FATAL:
+            return "FATAL";
         default:
             return "UNKNOWN";
     }

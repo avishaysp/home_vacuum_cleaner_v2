@@ -4,11 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <format>
 
 enum LogLevel {
     INFO,
     WARNING,
-    ERROR
+    FATAL
 };
 
 class Logger {

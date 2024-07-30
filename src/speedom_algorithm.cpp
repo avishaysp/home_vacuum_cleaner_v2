@@ -42,7 +42,8 @@ Step SpeedomAlgorithm::nextStep() {
 
     std::vector<AlgoLoc> possibleLocations = getPossibleLocations();
     size_t battery_level = battery_meter->getBatteryState();
-    size_t dirt_level = dirt_sensor->dirtLevel();
+    size_t dirt_level = current_location == starting_location ? 0 : dirt_sensor->dirtLevel();
+    logger.log(INFO, std::format("Speedom | current_location: {}, battery_level: {}, dirt_level: {}",current_location.toString(), battery_level, dirt_level));
 
     internal_house.updateGraph(dirt_level, possibleLocations);
     
@@ -188,8 +189,7 @@ void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::
 }
 
 
-bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<Location>& locations,
-                                                    Location loc) const {
+bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<Location>& locations, Location loc) const {
 
     return (std::find(locations.begin(), locations.end(), loc) != locations.end());
 }

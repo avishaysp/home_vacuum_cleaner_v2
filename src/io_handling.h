@@ -10,7 +10,6 @@
 #include "house.h"
 #include "Path.h"
 #include "logger.h"
-#include <format>
 #include "simulator.h"
 
 
