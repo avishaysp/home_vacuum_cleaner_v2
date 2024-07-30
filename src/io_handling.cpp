@@ -152,66 +152,54 @@ FileWriter::FileWriter(const std::string& file_path) : file_path(file_path) {
     file.close();
 }
 
+void FileWriter::writeNumberOfSteps(const Path& path) {
+    std::ofstream file(file_path, std::ios_base::app);
+    if (!file.is_open()) {
+        std::cout << "Could not open file for writing" << std::endl;
+    }
+    file << "NumSteps:" << (path.getLength() - 1) << std::endl;
+
+    file.close();
+}
+
+void FileWriter::writeDirt(size_t dirt) {
+    std::ofstream file(file_path, std::ios_base::app);
+    if (!file.is_open()) {
+        std::cout << "Could not open file for writing" << std::endl;
+    }
+    file << "DirtLeft:" << dirt << std::endl;
+    file.close();
+}
+
+void FileWriter::writeStatus(Simulator::Status status) {
+    std::ofstream file(file_path, std::ios_base::app);
+    if (!file.is_open()) {
+        std::cout << "Could not open file for writing" << std::endl;
+    }
+    switch (status)
+    {
+    case Simulator::Status::FINISH:
+        file << "FINISHED";
+        break;
+    case Simulator::Status::DEAD:
+        file << "DEAD";
+        break;
+    default:
+        file << "WORKING";
+        break;
+    }
+    file << std::endl;
+    file.close();
+}
+
 void FileWriter::writePath(const Path& path) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
     }
-    file << path;
+    file << path.toString();
     file << "Total number of steps performed: " << (path.getLength() - 1) << std::endl;
 
-    file.close();
-}
-
-// void FileWriter::writeHouse(const House& house) {
-//     // std::ofstream file(file_path, std::ios_base::app);
-//     // if (!file.is_open()) {
-//     //     std::cout << "Could not open file for writing" << std::endl;
-//     // }
-
-//     // size_t rows = house.getRowsCount();
-//     // size_t cols = house.getColsCount();
-
-//     // for (size_t row = 0; row < rows; row++) {
-//     //     FileWriter::printTopWall(file, house, row, cols);
-//     //     FileWriter::printDirt(file, house, row, cols);
-//     // }
-
-//     // // Print the bottom wall segment of the last row
-//     // printBottomWall(file, house, rows - 1, cols);
-
-//     // file.close();
-// }
-
-void FileWriter::writedDirt(size_t dirt) {
-    std::ofstream file(file_path, std::ios_base::app);
-    if (!file.is_open()) {
-        std::cout << "Could not open file for writing" << std::endl;
-    }
-    file << "Final amount of dirt: " << dirt << std::endl;
-    file.close();
-}
-
-void FileWriter::writedBat(size_t battery) {
-    std::ofstream file(file_path, std::ios_base::app);
-    if (!file.is_open()) {
-        std::cout << "Could not open file for writing" << std::endl;
-    }
-    file << "Battery level on finish: " << battery << std::endl;
-    file << (battery > 0 ? "Battery was not exhausted" :  "Battery is dead") << std::endl;
-    file.close();
-}
-
-void FileWriter::writedAccomplish(size_t dirt, bool isInDock) {
-    std::ofstream file(file_path, std::ios_base::app);
-    if (!file.is_open()) {
-        std::cout << "Could not open file for writing" << std::endl;
-    }
-    if (dirt == 0 && isInDock) {
-        file << "Misson Accomplished!" << std::endl;
-    } else {
-        file << "Misson Not Accomplished..." << std::endl;
-    }
     file.close();
 }
 

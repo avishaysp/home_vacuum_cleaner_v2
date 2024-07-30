@@ -1,5 +1,4 @@
 // Path.cpp
-
 #include "Path.h"
 
 Path::Path() {}
@@ -15,6 +14,36 @@ size_t Path::getLength() const{
 
 void Path::print() const {
     std::cout << *this;
+}
+
+std::string Path::toString() const {
+    std::string path_chars = "";
+
+    for (Step step : vec) {
+        switch (step)
+        {
+        case Step::North:
+            path_chars += 'N';
+            break;
+        case Step::South:
+            path_chars += 'S';
+            break;
+        case Step::East:
+            path_chars += 'E';
+            break;
+        case Step::West:
+            path_chars += 'W';
+            break;
+        case Step::Stay:
+            path_chars += 's';
+            break;
+        default:
+            path_chars += 'F';
+            break;
+        }
+    }
+
+    return path_chars;
 }
 
 std::ostream& operator<<(std::ostream& os, const Path& path) {

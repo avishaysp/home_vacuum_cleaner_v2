@@ -12,15 +12,18 @@ LiveSimulator& LiveSimulator::getInstance() {
 
 LiveSimulator::~LiveSimulator() {}
 
-void LiveSimulator::simulate(const House& house, const Location& curr_location) {
+void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step) {
     logger.log(INFO, "Start waiting for 0.5 second");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     logger.log(INFO, "Printing house");
-    printHouseForSimulator(house, curr_location);
+    printHouseForSimulator(house, curr_location, step);
+    if (step == Step::Finish) {
+        std::cout << "Cleaning has Finished, Exit Simulation" << std::endl;
+    }
 }
 
 
-void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc) {
+void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc, Step step) {
     std::cout << "\033[2J\033[1;1H";
 
     size_t house_rows = house.getRowsCount();
@@ -32,7 +35,11 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
 
     for (size_t i = 0; i < house_rows; i++) {
         if ((i == curr_row) && (curr_col == 0)) {
-            std::cout << "W[";
+            if (step == Step::Stay){
+                std::cout << "W<";
+            } else {
+                std::cout << "W[";
+            }
         } else {
             std::cout << "W ";
         }
@@ -46,10 +53,18 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
                 std::cout << tile.getDirtLevel();
             }
             if ((i == curr_row) && (j == curr_col - 1)) {
-                std::cout << "[";
-            }
+                if (step == Step::Stay){
+                    std::cout << "W<";
+                } else {
+                    std::cout << "W[";
+                }
+            } 
             else if ((i == curr_row) && (j == curr_col)) {
-                std::cout << "]";
+                if (step == Step::Stay){
+                    std::cout << ">";
+                } else {
+                    std::cout << "]";
+                }
             } else {
                 std::cout << ' ';
             }

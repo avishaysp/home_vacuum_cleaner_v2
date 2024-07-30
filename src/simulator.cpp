@@ -21,6 +21,20 @@ void Simulator::readHouseFile(const std::string input_file_path) {
     setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
 }
 
+void Simulator::writeToOutputFile(Status status) {
+    FileWriter fw("output.txt");
+    fw.writeNumberOfSteps(history_path);
+    fw.writeDirt(house->calcTotalDirt());
+    fw.writeStatus(status);
+    fw.writePath(history_path);
+}
+
+void Simulator::readHouseFile(const std::string input_file_path) {
+    FileReader fr(input_file_path);
+    FileReader::file_reader_output args = fr.readFile();
+    setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
+}
+
 //setters
 
 void Simulator::setBatterySize(const size_t battery_size) {
@@ -88,7 +102,16 @@ size_t Simulator::getHistoryLength() const {
 
 
 void Simulator::run() {
+    Step step;
+    Status final_status = Status::WORKING;
     for (size_t i = 0; i < max_steps; ++i) {
+
+        if ((current_location == house->getDockingStation()) && current_battery <= 0) {
+            logger.log(ERROR, "Battery level is empty, Can not continue cleaning");
+            final_status = Status::DEAD;
+            break;
+        }
+
         Step step = algo->nextStep();
 
         //Stay in docking station
@@ -114,12 +137,17 @@ void Simulator::run() {
 
         //finish running
         else {
-
+            addToHistory(step);
+            live_simulator.simulate(*house, current_location, step);
+            final_status = Status::FINISH;
+            break;
         }
-        addToHistory(step);
-        live_simulator.simulate(*house, current_location);
 
+        addToHistory(step);
+        live_simulator.simulate(*house, current_location, step);
     }
+
+    writeToOutputFile(final_status);
 }
 
 void Simulator::updateDirtLevel() {

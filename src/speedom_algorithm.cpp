@@ -45,8 +45,7 @@ Step SpeedomAlgorithm::nextStep() {
     size_t dirt_level = dirt_sensor->dirtLevel();
 
     internal_house.updateGraph(dirt_level, possibleLocations);
-
-    //TODO: possibility to prefer cleaning other parts rather than charging
+    
     if (current_location == starting_location && battery_level < battery_size) {
         return Step::Stay;
     }

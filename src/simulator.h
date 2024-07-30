@@ -13,6 +13,14 @@
 
 
 class Simulator {
+
+public:
+    enum Status {
+        FINISH,
+        WORKING,
+        DEAD,
+    }; 
+
     size_t battery_size;
     size_t current_battery;
     size_t max_steps;
@@ -36,16 +44,14 @@ class Simulator {
                         const std::shared_ptr<House> house_map);
 
 
-
-
-
     void move(Step step);
     void addToHistory(Step step);
-    void decreaseTotalDirt();
     void updateDirtLevel();
 
+    void Simulator::writeToOutputFile(Status status);
 
     public:
+
         Simulator();
 
         void readHouseFile(const std::string input_file_path);

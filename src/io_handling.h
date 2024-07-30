@@ -10,7 +10,8 @@
 #include "house.h"
 #include "Path.h"
 #include "logger.h"
-// #include <format>
+#include <format>
+#include "simulator.h"
 
 
 class FileReader {
@@ -41,9 +42,8 @@ class FileWriter {
 public:
     FileWriter(const std::string& file_path);
 
-    void writeHouse(const House& house);
+    void writeNumberOfSteps(const Path& path);
     void writePath(const Path& path);
-    void writedDirt(size_t dirt);
-    void writedBat(size_t battery);
-    void writedAccomplish(size_t dirt, bool isInDock);
+    void writeDirt(size_t dirt);
+    void writeStatus(Simulator::Status status);
 };
