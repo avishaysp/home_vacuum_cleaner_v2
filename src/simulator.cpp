@@ -29,11 +29,6 @@ void Simulator::writeToOutputFile(Status status) {
     fw.writePath(history_path);
 }
 
-void Simulator::readHouseFile(const std::string input_file_path) {
-    FileReader fr(input_file_path);
-    FileReader::file_reader_output args = fr.readFile();
-    setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
-}
 
 //setters
 
@@ -107,12 +102,12 @@ void Simulator::run() {
     for (size_t i = 0; i < max_steps; ++i) {
 
         if ((current_location == house->getDockingStation()) && current_battery <= 0) {
-            logger.log(ERROR, "Battery level is empty, Can not continue cleaning");
+            logger.log(FATAL, "Battery level is empty, Can not continue cleaning");
             final_status = Status::DEAD;
             break;
         }
 
-        Step step = algo->nextStep();
+        step = algo->nextStep();
 
         //Stay in docking station
         if ((step == Step::Stay) && (current_location == house->getDockingStation())) {

@@ -10,7 +10,7 @@
 #include "house.h"
 #include "Path.h"
 #include "logger.h"
-#include "simulator.h"
+#include "status.h"
 
 
 class FileReader {
@@ -44,5 +44,5 @@ public:
     void writeNumberOfSteps(const Path& path);
     void writePath(const Path& path);
     void writeDirt(size_t dirt);
-    void writeStatus(Simulator::Status status);
+    void writeStatus(Status status);
 };

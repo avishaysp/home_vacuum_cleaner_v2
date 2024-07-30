@@ -9,17 +9,26 @@
 #include "sensors/battery_meter_imp.h"
 #include "Path.h"
 #include "speedom_algorithm.h"
+#include "status.h"
 
 
 
 class Simulator {
 
 public:
-    enum Status {
-        FINISH,
-        WORKING,
-        DEAD,
-    }; 
+
+    Simulator();
+
+    void readHouseFile(const std::string input_file_path);
+
+    void setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg);
+
+    void run();
+
+    const Path& getPath() const;
+    size_t getHistoryLength() const;
+
+private:
 
     size_t battery_size;
     size_t current_battery;
@@ -48,18 +57,6 @@ public:
     void addToHistory(Step step);
     void updateDirtLevel();
 
-    void Simulator::writeToOutputFile(Status status);
+    void writeToOutputFile(Status status);
 
-    public:
-
-        Simulator();
-
-        void readHouseFile(const std::string input_file_path);
-
-        void setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg);
-
-        void run();
-
-        const Path& getPath() const;
-        size_t getHistoryLength() const;
 };

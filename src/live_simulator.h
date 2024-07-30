@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include "house.h"
-#include "enums.h"
+#include "skelaton/enums.h"
 
 class LiveSimulator {
 public:

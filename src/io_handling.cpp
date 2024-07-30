@@ -171,17 +171,17 @@ void FileWriter::writeDirt(size_t dirt) {
     file.close();
 }
 
-void FileWriter::writeStatus(Simulator::Status status) {
+void FileWriter::writeStatus(Status status) {
     std::ofstream file(file_path, std::ios_base::app);
     if (!file.is_open()) {
         std::cout << "Could not open file for writing" << std::endl;
     }
     switch (status)
     {
-    case Simulator::Status::FINISH:
+    case Status::FINISH:
         file << "FINISHED";
         break;
-    case Simulator::Status::DEAD:
+    case Status::DEAD:
         file << "DEAD";
         break;
     default:
