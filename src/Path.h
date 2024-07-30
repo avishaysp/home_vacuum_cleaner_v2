@@ -13,12 +13,6 @@ public:
 
     size_t getLength() const;
 
-    Step popStep();
-
-    Step topStep() const;
-
-    void cutPath(const size_t idx);
-
     void print() const;
     friend std::ostream& operator<<(std::ostream& os, const Path& path);
 

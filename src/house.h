@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <iostream>
-#include <unordered_map>
 #include "logger.h"
 #include "location_base.h"
 

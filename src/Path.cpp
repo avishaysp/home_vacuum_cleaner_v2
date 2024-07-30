@@ -13,27 +13,6 @@ size_t Path::getLength() const{
     return vec.size();
 }
 
-Step Path::popStep() {
-    if (!vec.empty()) {
-        Step last = vec.back();
-        vec.pop_back();
-        return last;
-    }
-    logger.log(ERROR, "Popped the first elem in the Path. Big No No.");
-
-}
-
-Step Path::topStep() const {
-    if (!vec.empty()) {
-        return vec.back();
-    }
-    logger.log(ERROR, "Popped the first elem in the Path. Big No No.");
-}
-
-void Path::cutPath(const size_t idx){
-    vec = std::vector<Step>(vec.begin(), vec.begin() + idx + 1);
-}
-
 void Path::print() const {
     std::cout << *this;
 }

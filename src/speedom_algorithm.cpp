@@ -212,15 +212,15 @@ std::pair<Step, SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::InternalH
 }
 
 void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::vector<SpeedomAlgorithm::AlgorithmLocation>& possible_Locations) {
-    internal_graph[current_location].dirt_level = dirt_level;
-    if(internal_graph[current_location].visited) {
+    internal_graph.at(current_location).dirt_level = dirt_level;
+    if(internal_graph.at(current_location).visited) {
         return;
     } 
-    internal_graph[current_location].visited = true;
-    internal_graph[current_location].neighbors = possible_Locations;
+    internal_graph.at(current_location).visited = true;
+    internal_graph.at(current_location).neighbors = possible_Locations;
     for (auto& loc : possible_Locations) {
-        if (!isInNeighbors(internal_graph[loc].neighbors, current_location)) {
-            internal_graph[loc].neighbors.push_back(current_location);
+        if (!isInNeighbors(internal_graph.at(loc).neighbors, current_location)) {
+            internal_graph.at(loc).neighbors.push_back(current_location);
         }
     } 
 }

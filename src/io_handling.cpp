@@ -33,6 +33,7 @@ size_t FileReader::strToSize_t(const std::string &str) const {
     } catch (const std::out_of_range& e) {
         logger.log(ERROR, "Out of range: " + std::string(e.what()));
     }
+    return 0;
 }
 
 std::string FileReader::trim(const std::string &str) const {
@@ -98,10 +99,10 @@ FileReader::FileReader(const std::string& file_path) : file_path(file_path) {}
 
 
 FileReader::file_reader_output FileReader::readFile() const {
-    size_t max_num_of_steps;
-    size_t max_battery_steps;
-    size_t rows_count;
-    size_t cols_count;
+    size_t max_num_of_steps = 0;
+    size_t max_battery_steps = 0;
+    size_t rows_count = 0;
+    size_t cols_count = 0;
 
     std::ifstream file(file_path);
 

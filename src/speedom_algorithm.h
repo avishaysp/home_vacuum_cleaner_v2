@@ -72,7 +72,7 @@ private:
        
         InternalHouse(AlgorithmLocation& start_loc, AlgorithmLocation& curr_loc)
             : starting_location(start_loc), current_location(curr_loc) {
-                internal_graph[start_loc] = 
+                internal_graph.at(start_loc) = 
                 {
                     0, false, 0, std::nullopt, 0, std::nullopt, std::vector<AlgorithmLocation>()
                 };
@@ -106,7 +106,7 @@ private:
     std::vector<SpeedomAlgorithm::AlgorithmLocation> getPossibleLocations() const;
     bool isFeasible(size_t travel_distance, size_t current_battery) const;
 
-    Step SpeedomAlgorithm::updateCurrentLocAndGetNextStep(InternalHouse::LocationType target);
+    Step updateCurrentLocAndGetNextStep(InternalHouse::LocationType target);
 
 public:
     using AlgoLoc = SpeedomAlgorithm::AlgorithmLocation;
