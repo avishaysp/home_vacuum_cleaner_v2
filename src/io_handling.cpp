@@ -50,9 +50,9 @@ std::string FileReader::trim(const std::string &str) const {
     return std::string(start, end + 1);
 }
 
-House::Location FileReader::parseLocation(const std::string &str) const {
+Location FileReader::parseLocation(const std::string &str) const {
     auto tmp_vec = split(str, '|');
-    return House::Location(
+    return Location(
         strToSize_t(tmp_vec[0].substr(1)),                            // row
         strToSize_t(tmp_vec[1].substr(0, tmp_vec[1].size() - 1))      // col
     );
@@ -74,24 +74,24 @@ void FileReader::ParseHouse(std::ifstream &file, std::shared_ptr<House> house) c
             char c  = vec_line[col_index];
             if (c == 'D') {
                 house->getTile(row_index, col_index).setAsDockingStation();
-                house->setDockingStation(House::Location(row_index, col_index));
-                logger.log(INFO, std::format("Set a Docking Station ({},{})", row_index, col_index));
+                house->setDockingStation(Location(row_index, col_index));
+                logger.log(INFO, ""); // std::format("Set a Docking Station ({},{})", row_index, col_index));
             } else if (c == 'W') {
                 house->getTile(row_index, col_index).setAsWall();
-                logger.log(INFO, std::format("Set a Wall ({},{})", row_index, col_index));
+                logger.log(INFO, ""); // std::format("Set a Wall ({},{})", row_index, col_index));
             } else if (c == ' ') {
                 house->getTile(row_index, col_index).setDirtLevel(0);
-                logger.log(INFO, std::format("Set an empty Tile ({},{})", row_index, col_index));
+                logger.log(INFO, ""); // std::format("Set an empty Tile ({},{})", row_index, col_index));
             } else if (isdigit(c)) {
                 house->getTile(row_index, col_index).setDirtLevel(int(c - '0'));
-                logger.log(INFO, std::format("Set an dirty Tile ({},{}). Dirt level: {}", row_index, col_index, int(c - '0')));
+                logger.log(INFO, ""); // std::format("Set an dirty Tile ({},{}). Dirt level: {}", row_index, col_index, int(c - '0')));
             } else {
-                logger.log(ERROR, std::format("Invalid charecter in house map ({},{})", row_index, col_index));
+                logger.log(ERROR, ""); // std::format("Invalid charecter in house map ({},{})", row_index, col_index));
             }
         }
         row_index++;
     }
-    logger.log(INFO, std::format("Populated house of size {} by {}",num_of_rows, num_of_cols));
+    logger.log(INFO, ""); // std::format("Populated house of size {} by {}",num_of_rows, num_of_cols));
 }
 
 

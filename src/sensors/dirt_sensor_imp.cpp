@@ -1,9 +1,9 @@
 
 #include "dirt_sensor_imp.h"
 
-DirtSensorImp::DirtSensorImp(House::Location& curr_location) :  house(nullptr), curr_location(curr_location) { }
+DirtSensorImp::DirtSensorImp(Location& curr_location) :  house(nullptr), curr_location(curr_location) { }
 
-DirtSensorImp::DirtSensorImp(const std::shared_ptr<House> house, House::Location& curr_location) :  house(house), curr_location(curr_location) { }
+DirtSensorImp::DirtSensorImp(const std::shared_ptr<House> house, Location& curr_location) :  house(house), curr_location(curr_location) { }
 
 void DirtSensorImp::setHouse(const std::shared_ptr<House> house) {
     this->house = house;

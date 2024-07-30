@@ -6,7 +6,7 @@
 
 House::House(size_t rows, size_t cols) : mat(rows, std::vector<House::Tile>(cols, House::Tile())), rows(rows), cols(cols) {}
 
-House::Tile& House::getTile(House::Location loc) {
+House::Tile& House::getTile(Location loc) {
     size_t row = loc.getRow();
     size_t col = loc.getCol();
     return getTile(row, col);
@@ -16,7 +16,7 @@ House::Tile& House::getTile(size_t row, size_t col) {
     return mat[row][col];
 }
 
-const House::Tile& House::getTile(House::Location loc) const {
+const House::Tile& House::getTile(Location loc) const {
     size_t row = loc.getRow();
     size_t col = loc.getCol();
     return getTile(row, col);
@@ -34,11 +34,11 @@ size_t House::getColsCount() const {
     return cols;
 }
 
-House::Location House::getDockingStation() const {
+Location House::getDockingStation() const {
     return docking_station;
 }
 
-void House::setDockingStation(House::Location docking_loc) {
+void House::setDockingStation(Location docking_loc) {
     docking_station = docking_loc;
 }
 
@@ -71,43 +71,6 @@ void House::print() const {
 }
 
 
-/* Location */
-
-House::Location::Location() : LocationBase() {}
-House::Location::Location(size_t row, size_t col) : LocationBase(row, col) {}
-
-// Copy Constructor
-House::Location::Location(const Location& other) : LocationBase(other.row, other.col) {}
-
-// Copy Assignment Operator
-House::Location& House::Location::operator=(const Location& other) {
-    if (this == &other) {
-        return *this; // handle self assignment
-    }
-    row = other.row;
-    col = other.col;
-    return *this;
-}
-
-// Move Constructor
-House::Location::Location(Location&& other) noexcept : LocationBase(other.row, other.col) {
-    other.row = 0;
-    other.col = 0;
-}
-
-// Move Assignment Operator
-House::Location& House::Location::operator=(Location&& other) noexcept {
-    if (this == &other) {
-        return *this;
-    }
-    row = other.row;
-    col = other.col;
-    other.row = 0;
-    other.col = 0;
-    return *this;
-}
-
-House::Location::~Location() {}
 
 /* Tile */
 

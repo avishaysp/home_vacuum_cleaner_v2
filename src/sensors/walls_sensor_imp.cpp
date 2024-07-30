@@ -1,8 +1,8 @@
 #include "walls_sensor_imp.h"
 
-WallsSensorImp::WallsSensorImp(const House::Location& curr_location) : house(nullptr), curr_location(curr_location) {}
+WallsSensorImp::WallsSensorImp(const Location& curr_location) : house(nullptr), curr_location(curr_location) {}
 
-WallsSensorImp::WallsSensorImp(const std::shared_ptr<House> house, const House::Location& curr_location) : house(house), curr_location(curr_location) {}
+WallsSensorImp::WallsSensorImp(const std::shared_ptr<House> house, const Location& curr_location) : house(house), curr_location(curr_location) {}
 
 void WallsSensorImp::setHouse(const std::shared_ptr<House> house) {
     this->house = house;

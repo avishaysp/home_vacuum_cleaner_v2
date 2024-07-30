@@ -114,7 +114,7 @@ void Simulator::run() {
 
         //finish running
         else {
-            
+
         }
         addToHistory(step);
         live_simulator.simulate(*house, current_location);
@@ -134,35 +134,37 @@ void Simulator::move(Step step) {
     size_t cols = house->getColsCount();
     size_t curr_row = current_location.getRow();
     size_t curr_col = current_location.getCol();
-    House::Location next_loc;
+    Location next_loc;
+    int next_row = 0;
+    int next_col = 0;
     switch (step) {
         case Step::North:
-            int next_row = curr_row - 1;
+            next_row = curr_row - 1;
             if (next_row < 0) {
                 logger.log(ERROR, "Tried to move North from northest row");
             }
-            next_loc = House::Location(next_row, curr_col);
+            next_loc = Location(next_row, curr_col);
             break;
         case Step::South:
-            int next_row = curr_row + 1;
-            if (next_row >= rows) {
+            next_row = curr_row + 1;
+            if (next_row >= (int)rows) {
                 logger.log(ERROR, "Tried to move South from southest row");
             }
-            next_loc = House::Location(next_row, curr_col);
+            next_loc = Location(next_row, curr_col);
             break;
         case Step::East:
-            int next_col = curr_col + 1;
-            if (next_col >= cols) {
+            next_col = curr_col + 1;
+            if (next_col >= (int)cols) {
                 logger.log(ERROR, "Tried to move East from most east col");
             }
-            next_loc = House::Location(curr_row, next_col);
+            next_loc = Location(curr_row, next_col);
             break;
         case Step::West:
-            int next_col = curr_col - 1;
+            next_col = curr_col - 1;
             if (next_col < 0) {
                 logger.log(ERROR, "Tried to move West from most west col");
             }
-            next_loc = House::Location(curr_row, next_col);
+            next_loc = Location(curr_row, next_col);
             break;
         default:
             break;

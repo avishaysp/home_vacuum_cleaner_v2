@@ -10,7 +10,7 @@
 #include "house.h"
 #include "Path.h"
 #include "logger.h"
-#include <format>
+// #include <format>
 
 
 class FileReader {
@@ -19,7 +19,7 @@ class FileReader {
     std::vector<std::string> split(const std::string &str, const char delimiter) const;
     size_t strToSize_t(const std::string &str) const;
     std::string trim(const std::string &str) const;
-    House::Location parseLocation(const std::string& str) const;
+    Location parseLocation(const std::string& str) const;
     size_t readArgument(const std::string& str) const;
     void ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const;
 

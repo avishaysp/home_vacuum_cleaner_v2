@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "logger.h"
-#include "location_base.h"
+#include "location.h"
 
 class House {
 
@@ -30,28 +30,6 @@ public:
         int dirt_level;
     };
 
-
-    class Location : public LocationBase<size_t> {
-    public:
-        // Constructors
-        Location();
-        Location(size_t row, size_t col);
-
-        // Copy Constructor
-        Location(const Location& other);
-
-        // Copy Assignment Operator
-        Location& operator=(const Location& other);
-
-        // Move Constructor
-        Location(Location&& other) noexcept;
-
-        // Move Assignment Operator
-        Location& operator=(Location&& other) noexcept;
-
-        // Destructor
-        ~Location();
-    };
 
     Tile& getTile(Location loc);
     Tile& getTile(size_t row, size_t col);

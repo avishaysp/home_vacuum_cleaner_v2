@@ -45,7 +45,7 @@ Step SpeedomAlgorithm::nextStep() {
     size_t dirt_level = dirt_sensor->dirtLevel();
 
     internal_house.updateGraph(dirt_level, possibleLocations);
-    
+
     //TODO: possibility to prefer cleaning other parts rather than charging
     if (current_location == starting_location && battery_level < battery_size) {
         return Step::Stay;
@@ -82,73 +82,36 @@ Step SpeedomAlgorithm::nextStep() {
 
 
 
-/* AlgorithmLocation */
-SpeedomAlgorithm::AlgorithmLocation::AlgorithmLocation() : LocationBase() {}
-SpeedomAlgorithm::AlgorithmLocation::AlgorithmLocation(int row, int col) : LocationBase(row, col) {}
-
-// Copy Constructor
-SpeedomAlgorithm::AlgorithmLocation::AlgorithmLocation(const AlgorithmLocation& other) : LocationBase(other.row, other.col) {}
-
-// Copy Assignment Operator
-SpeedomAlgorithm::AlgorithmLocation& SpeedomAlgorithm::AlgorithmLocation::operator=(const AlgorithmLocation& other) {
-    if (this == &other) {
-        return *this; 
-    }
-    row = other.row;
-    col = other.col;
-    return *this;
-}
-
-// Move Constructor
-SpeedomAlgorithm::AlgorithmLocation::AlgorithmLocation(AlgorithmLocation&& other) noexcept : LocationBase(other.row, other.col) {
-    other.row = 0;
-    other.col = 0;
-}
-
-// Move Assignment Operator
-SpeedomAlgorithm::AlgorithmLocation& SpeedomAlgorithm::AlgorithmLocation::operator=(AlgorithmLocation&& other) noexcept {
-    if (this == &other) {
-        return *this;
-    }
-    row = other.row;
-    col = other.col;
-    other.row = 0;
-    other.col = 0;
-    return *this;
-}
-
-SpeedomAlgorithm::AlgorithmLocation::~AlgorithmLocation() {}
-
-std::vector<SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::getPossibleLocations() const {
-    std::vector<SpeedomAlgorithm::AlgorithmLocation> possible_Locations;
+std::vector<Location> SpeedomAlgorithm::getPossibleLocations() const {
+    std::vector<Location> possible_Locations;
     int curr_row = current_location.getRow();
     int curr_col = current_location.getCol();
     if (!walls_sensor->isWall(Direction::North)){
-        possible_Locations.push_back(SpeedomAlgorithm::AlgorithmLocation(curr_row - 1, curr_col));
+        possible_Locations.push_back(Location(curr_row - 1, curr_col));
     }
     if (!walls_sensor->isWall(Direction::South)){
-        possible_Locations.push_back(SpeedomAlgorithm::AlgorithmLocation(curr_row + 1, curr_col));
+        possible_Locations.push_back(Location(curr_row + 1, curr_col));
     }
     if (!walls_sensor->isWall(Direction::East)){
-        possible_Locations.push_back(SpeedomAlgorithm::AlgorithmLocation(curr_row, curr_col + 1));
+        possible_Locations.push_back(Location(curr_row, curr_col + 1));
     }
     if (!walls_sensor->isWall(Direction::West)){
-        possible_Locations.push_back(SpeedomAlgorithm::AlgorithmLocation(curr_row, curr_col - 1));
+        possible_Locations.push_back(Location(curr_row, curr_col - 1));
     }
     return possible_Locations;
 }
 
-void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<SpeedomAlgorithm::AlgorithmLocation> chosen_location) {
-    std::queue<SpeedomAlgorithm::AlgorithmLocation> q;
-    std::unordered_set<SpeedomAlgorithm::AlgorithmLocation> bfsVisited;
+void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<Location> chosen_location) {
+    std::queue<Location> q;
+    std::unordered_set<Location> bfsVisited;
 
     if (start == DOCKING) {
         q.push(starting_location);
         bfsVisited.insert(starting_location);
         internal_graph.at(starting_location).distance_from_docking_station = 0;
         internal_graph.at(starting_location).father_from_docking = std::nullopt;
-    } 
-    
+    }
+
     else if (start == CURRENT) {
         q.push(current_location);
         bfsVisited.insert(current_location);
@@ -161,19 +124,19 @@ void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<Spee
     }
 
     while (!q.empty()) {
-        SpeedomAlgorithm::AlgorithmLocation current = q.front();
+        Location current = q.front();
         q.pop();
 
-        for (SpeedomAlgorithm::AlgorithmLocation neighbor : internal_graph.at(current).neighbors) {
+        for (Location neighbor : internal_graph.at(current).neighbors) {
             if (bfsVisited.find(neighbor) == bfsVisited.end()) {
                 if (start == DOCKING) {
                     internal_graph.at(neighbor).distance_from_docking_station = internal_graph.at(current).distance_from_docking_station + 1;
                     internal_graph.at(neighbor).father_from_docking = current;
-                } 
-                
+                }
+
                 else if (start == CURRENT) {
                     internal_graph.at(neighbor).distance_from_current = internal_graph.at(current).distance_from_current + 1;
-                } 
+                }
 
                 else {
                     internal_graph.at(neighbor).father_from_chosen = current;
@@ -187,17 +150,17 @@ void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<Spee
 }
 
 
-size_t SpeedomAlgorithm::InternalHouse::getDistanceToDoc(SpeedomAlgorithm::AlgorithmLocation other_location) const {
+size_t SpeedomAlgorithm::InternalHouse::getDistanceToDoc(Location other_location) const {
     return internal_graph.at(other_location).distance_from_docking_station;
 }
 
-SpeedomAlgorithm::AlgorithmLocation SpeedomAlgorithm::InternalHouse::getNextLocationToTarget(InternalHouse::LocationType target) const {
-    return target == DOCKING ? 
+Location SpeedomAlgorithm::InternalHouse::getNextLocationToTarget(InternalHouse::LocationType target) const {
+    return target == DOCKING ?
         internal_graph.at(current_location).father_from_docking.value() : internal_graph.at(current_location).father_from_chosen.value();
 }
 
-std::pair<Step, SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::InternalHouse::calcStepToTarget(InternalHouse::LocationType target) const {
-    SpeedomAlgorithm::AlgorithmLocation next = getNextLocationToTarget(target);
+std::pair<Step, Location> SpeedomAlgorithm::InternalHouse::calcStepToTarget(InternalHouse::LocationType target) const {
+    Location next = getNextLocationToTarget(target);
     if (next.getRow() > current_location.getRow()){
         return std::make_pair(Step::South, next);
     }
@@ -211,29 +174,29 @@ std::pair<Step, SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::InternalH
 
 }
 
-void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::vector<SpeedomAlgorithm::AlgorithmLocation>& possible_Locations) {
+void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::vector<Location>& possible_Locations) {
     internal_graph.at(current_location).dirt_level = dirt_level;
     if(internal_graph.at(current_location).visited) {
         return;
-    } 
+    }
     internal_graph.at(current_location).visited = true;
     internal_graph.at(current_location).neighbors = possible_Locations;
     for (auto& loc : possible_Locations) {
         if (!isInNeighbors(internal_graph.at(loc).neighbors, current_location)) {
             internal_graph.at(loc).neighbors.push_back(current_location);
         }
-    } 
+    }
 }
 
 
-bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<SpeedomAlgorithm::AlgorithmLocation>& locations, 
-                                                    SpeedomAlgorithm::AlgorithmLocation loc) const {
-    
+bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<Location>& locations,
+                                                    Location loc) const {
+
     return (std::find(locations.begin(), locations.end(), loc) != locations.end());
 }
 
-std::pair<size_t, SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::InternalHouse::minimalDistanceLocation() const {
-    
+std::pair<size_t, Location> SpeedomAlgorithm::InternalHouse::minimalDistanceLocation() const {
+
     auto min_location = (*internal_graph.begin()).first;
     size_t min_distance = calculateTravelDistance(min_location);
 
@@ -249,16 +212,16 @@ std::pair<size_t, SpeedomAlgorithm::AlgorithmLocation> SpeedomAlgorithm::Interna
         }
     }
     return std::make_pair(min_distance, min_location);
-    
+
 }
 
-size_t SpeedomAlgorithm::InternalHouse::calculateTravelDistance(SpeedomAlgorithm::AlgorithmLocation loc) const {
-    
+size_t SpeedomAlgorithm::InternalHouse::calculateTravelDistance(Location loc) const {
+
     if (current_location == starting_location) {
         return 2 * internal_graph.at(loc).distance_from_docking_station;
     }
 
     return internal_graph.at(loc).distance_from_docking_station + internal_graph.at(loc).distance_from_current;
 
-    
+
 }

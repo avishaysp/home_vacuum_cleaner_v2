@@ -12,7 +12,7 @@ LiveSimulator& LiveSimulator::getInstance() {
 
 LiveSimulator::~LiveSimulator() {}
 
-void LiveSimulator::simulate(const House& house, const House::Location& curr_location) {
+void LiveSimulator::simulate(const House& house, const Location& curr_location) {
     logger.log(INFO, "Start waiting for 0.5 second");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     logger.log(INFO, "Printing house");
@@ -20,7 +20,7 @@ void LiveSimulator::simulate(const House& house, const House::Location& curr_loc
 }
 
 
-void LiveSimulator::printHouseForSimulator(const House& house, const House::Location& current_loc) {
+void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc) {
     std::cout << "\033[2J\033[1;1H";
 
     size_t house_rows = house.getRowsCount();
@@ -47,7 +47,7 @@ void LiveSimulator::printHouseForSimulator(const House& house, const House::Loca
             }
             if ((i == curr_row) && (j == curr_col - 1)) {
                 std::cout << "[";
-            } 
+            }
             else if ((i == curr_row) && (j == curr_col)) {
                 std::cout << "]";
             } else {

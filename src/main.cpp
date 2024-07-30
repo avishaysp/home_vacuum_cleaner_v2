@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        logger.log(ERROR, std::format("one argument required - inputfile, got {}", int(argc - 1)));
+        logger.log(ERROR, ""); // std::format("one argument required - inputfile, got {}", int(argc - 1)));
     }
 
     std::string input_file_path = argv[1];

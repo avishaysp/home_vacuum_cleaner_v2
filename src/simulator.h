@@ -17,7 +17,7 @@ class Simulator {
     size_t current_battery;
     size_t max_steps;
     std::shared_ptr<House> house;
-    House::Location current_location;
+    Location current_location;
     Path history_path; // verify if needed
     WallsSensorImp walls_sensor;
     const BatteryMeterImp battery_meter;
