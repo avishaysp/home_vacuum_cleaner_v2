@@ -1,5 +1,5 @@
 Giant house
-MaxSteps=10000
+MaxSteps=1000
 MaxBattery = 200
 Rows= 9
 Cols=40
