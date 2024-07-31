@@ -66,7 +66,7 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
                 } else {
                     std::cout << "[";
                 }
-            } 
+            }
             else if ((i == curr_row) && (j == curr_col)) {
                 if (step == Step::Stay){
                     if (is_docking) {
