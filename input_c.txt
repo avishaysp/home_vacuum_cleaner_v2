@@ -1,10 +1,10 @@
 Giant house
 MaxSteps=10000
 MaxBattery = 200
-Rows= 4
-Cols=12
+Rows= 9
+Cols=40
 WWWWWWWWWWWWWWWWWWWWWWWWW
-WWWWWW      W                 W       WW
+WWWWWW                        W       WW
 WWWWWW      W  1234567898765432W      WW
 W      W    W  1          2    W      WW
 W  D   W    W  1          2    W      WW
