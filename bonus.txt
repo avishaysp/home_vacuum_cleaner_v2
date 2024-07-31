@@ -1,0 +1,16 @@
+## Logging:
+    Added a global logger.
+    Used to push logs with levels:
+        - INFO
+        - WARNING
+        - FATAL
+    When FATAL terminates the program, used for unrecoverable cases.
+    log file is `vacuum_cleaner.log`. Resets on every run.
+
+## Visualization:
+    uses standard output to visualize the robot's travel in the house.
+    Shows the deferent modes of the robot (moving, cleaning and charging).
+    Shows battery level and remaning steps.
+    Adds walls around the house - they do not appear in the house representation of the simulator, they are just for better visability.
+    To run with visualization:
+        add flag --visualize
