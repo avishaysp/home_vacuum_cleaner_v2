@@ -37,4 +37,10 @@ WWWWWWWWWWWW
 
 ## Run
 
-./myrobot <input_file>
+# Standard:
+
+```./myrobot <input_file>```
+
+# Visualisation:
+
+```./myrobot <input_file> --visualize```
