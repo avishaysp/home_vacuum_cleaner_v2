@@ -16,7 +16,7 @@ SRCS = $(wildcard $(SRCDIR)/*.cpp) $(wildcard $(SRCDIR)/*/*.cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
 
 # Executable name
-EXEC = $(BINDIR)/executable
+EXEC = $(BINDIR)/myrobot
 
 # Default target
 all: $(EXEC)
