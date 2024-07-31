@@ -37,3 +37,6 @@ bin/*
 # Logs
 *.log
 bin/executable
+output_input_a.txt
+output_input_b.txt
+output_input_c.txt
