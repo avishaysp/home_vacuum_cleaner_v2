@@ -66,6 +66,7 @@ void Simulator::setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg) {
     alg->setDirtSensor(dirt_sensor);
     alg->setBatteryMeter(battery_meter);
     alg->setMaxSteps(max_steps);
+    alg->setBatterySize(battery_size / 100);
     algo = alg;
 }
 
@@ -102,7 +103,7 @@ void Simulator::run() {
     logger.log(INFO, "Simulator | Start cleaning house");
     for (size_t i = 0; i < max_steps; ++i) {
 
-        if ((current_location == house->getDockingStation()) && current_battery <= 0) {
+        if ((current_location != house->getDockingStation()) && current_battery <= 0) {
             logger.log(FATAL, "Simulator | Battery level is empty, Can not continue cleaning");
             final_status = Status::DEAD;
             break;
@@ -114,9 +115,8 @@ void Simulator::run() {
             if (current_battery == battery_size) {
                 logger.log(FATAL, "Simulator | Stayed in docking station even though battary is full. Inappropriate behavior.");
             }
-
-            current_battery = std::max(current_battery + delta_battery, battery_size);
-            logger.log(INFO, std::format("Simulator | Ney battery after charging {}", current_battery));
+            current_battery = std::min(current_battery + delta_battery, battery_size);
+            logger.log(INFO, std::format("Simulator | New battery after charging {}", current_battery / 100));
         }
 
         else if (step == Step::Stay) {
@@ -133,13 +133,13 @@ void Simulator::run() {
         else {
             logger.log(INFO, "Simulator | Simulator successfully finished running ");
             addToHistory(step);
-            live_simulator.simulate(*house, current_location, step);
+            live_simulator.simulate(*house, current_location, step, false);
             final_status = Status::FINISH;
             break;
         }
 
         addToHistory(step);
-        live_simulator.simulate(*house, current_location, step);
+        live_simulator.simulate(*house, current_location, step, current_location == house->getDockingStation());
     }
 
     logger.log(INFO, "Simulator | Prepering output file");

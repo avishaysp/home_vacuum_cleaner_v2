@@ -44,9 +44,13 @@ void House::setDockingStation(Location docking_loc) {
 }
 
 int House::calcTotalDirt() const {
+    logger.log(INFO, "calculating dirt");
     int sum = 0;
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
+            if (mat[i][j].isWall() || mat[i][j].isDockingStation()) {
+                continue;
+            }
             if (mat[i][j].getDirtLevel() > 0) {
                 sum += mat[i][j].getDirtLevel();
             }

@@ -28,7 +28,12 @@ void SpeedomAlgorithm::setBatteryMeter(const BatteryMeter& batteryMeter) {
     battery_meter = &batteryMeter;
 }
 
+void SpeedomAlgorithm::setBatterySize(size_t battery_size){
+    this->battery_size = battery_size;
+}
+
 bool SpeedomAlgorithm::isFeasible(size_t travel_distance, size_t current_battery) const {
+    logger.log(INFO, std::format("Speedom Algorithm | isFeasible travel distance: {}, current battery: {}, max steps: {}", travel_distance, current_battery, max_steps));
     return travel_distance + 1 <= std::min(current_battery, max_steps);
 }
 
@@ -44,11 +49,10 @@ Step SpeedomAlgorithm::nextStep() {
     std::vector<AlgoLoc> possibleLocations = getPossibleLocations();
     size_t battery_level = battery_meter->getBatteryState();
     size_t dirt_level = current_location == starting_location ? 0 : dirt_sensor->dirtLevel();
-    logger.log(INFO, std::format("Speedom | current_location: {}, battery_level: {}, dirt_level: {}",current_location.toString(), battery_level, dirt_level));
+    logger.log(INFO, std::format("Speedom | current_location: {}, battery_level: {}, dirt_level: {}", current_location.toString(), battery_level, dirt_level));
 
     internal_house.updateGraph(dirt_level, possibleLocations);
-    
-    if (current_location == starting_location && battery_level < battery_size) {
+    if ((current_location == starting_location) && (battery_level < battery_size)) {
         return Step::Stay;
     }
 
@@ -88,24 +92,18 @@ std::vector<Location> SpeedomAlgorithm::getPossibleLocations() const {
     std::vector<Location> possible_Locations;
     int curr_row = current_location.getRow();
     int curr_col = current_location.getCol();
-    logger.log(INFO, "Speedom Algorithm | getPossibleLocations 2");
     if (!walls_sensor->isWall(Direction::North)){
-        logger.log(INFO, "Speedom Algorithm | getPossibleLocations north");
         possible_Locations.push_back(Location(curr_row - 1, curr_col));
     }
     if (!walls_sensor->isWall(Direction::South)){
-        logger.log(INFO, "Speedom Algorithm | getPossibleLocations south");
         possible_Locations.push_back(Location(curr_row + 1, curr_col));
     }
     if (!walls_sensor->isWall(Direction::East)){
-        logger.log(INFO, "Speedom Algorithm | getPossibleLocations east");
         possible_Locations.push_back(Location(curr_row, curr_col + 1));
     }
     if (!walls_sensor->isWall(Direction::West)){
-        logger.log(INFO, "Speedom Algorithm | getPossibleLocations west");
         possible_Locations.push_back(Location(curr_row, curr_col - 1));
     }
-    logger.log(INFO, "Speedom Algorithm | finished getPossibleLocations");
     return possible_Locations;
 }
 
@@ -165,7 +163,6 @@ size_t SpeedomAlgorithm::InternalHouse::getDistanceToDoc(Location other_location
 }
 
 Location SpeedomAlgorithm::InternalHouse::getNextLocationToTarget(InternalHouse::LocationType target) const {
-    logger.log(INFO, std::format("Speedom Algorithm | getNextLocationToTarget, current location : {}", (int)target));
     return target == DOCKING ?
         internal_graph.at(current_location).father_from_docking.value() : internal_graph.at(current_location).father_from_chosen.value();
 }
@@ -192,10 +189,8 @@ void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::
     if(internal_graph.at(current_location).visited) {
         return;
     }    
-    logger.log(INFO, "Speedom Algorithm | after verifying visited");
     internal_graph.at(current_location).visited = true;
     internal_graph.at(current_location).neighbors = possible_Locations;
-    logger.log(INFO, "Speedom Algorithm | after verifying visited 2");
     for (auto& loc : possible_Locations) {
         if (!internal_graph.contains(loc)){
             internal_graph[loc] = {0, false, 0, std::nullopt, 0, std::nullopt, std::vector<Location>()};    
@@ -213,19 +208,19 @@ bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<Location>&
 }
 
 std::pair<size_t, Location> SpeedomAlgorithm::InternalHouse::minimalDistanceLocation() const {
-    
+    bool isFirst = true;
     auto min_location = (*internal_graph.begin()).first;
     size_t min_distance = calculateTravelDistance(min_location);
 
     for (const auto& entry : internal_graph) {
-        if (entry.second.visited && entry.second.dirt_level == 0) {
+        if ((entry.second.visited && entry.second.dirt_level == 0) || (entry.first == current_location)) {
             continue;
         }
-
         size_t current_dist = calculateTravelDistance(entry.first);
-        if (current_dist < min_distance) {
+        if ((current_dist < min_distance) || isFirst) {
             min_location = entry.first;
             min_distance = current_dist;
+            isFirst = false;
         }
     }
     return std::make_pair(min_distance, min_location);
@@ -233,7 +228,6 @@ std::pair<size_t, Location> SpeedomAlgorithm::InternalHouse::minimalDistanceLoca
 }
 
 size_t SpeedomAlgorithm::InternalHouse::calculateTravelDistance(Location loc) const {
-    logger.log(INFO, "Speedom Algorithm | calculateTravelDistance");
     if (current_location == starting_location) {
         return 2 * internal_graph.at(loc).distance_from_docking_station;
     }
