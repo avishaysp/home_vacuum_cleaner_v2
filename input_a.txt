@@ -1,6 +1,6 @@
 1. stam house
-MaxSteps = 100
-MaxBattery=20
+MaxSteps = 200
+MaxBattery=30
 Rows = 4
 Cols =10
 WWWW

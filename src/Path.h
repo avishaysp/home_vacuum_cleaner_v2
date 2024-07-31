@@ -3,32 +3,23 @@
 
 #include <vector>
 #include "house.h"
+#include <string>
+#include "skelaton/enums.h"
 
 class Path {
 public:
+    Path();
 
-    Path(const House::Location start_loc);
-
-    void addEntry(const House::Location loc);
+    void addEntry(Step dir);
 
     size_t getLength() const;
 
-    House::Location popStep();
-
-    House::Location topStep() const;
-
-    void cutPath(const size_t idx);
-
-    House::Location getPrev() const;
-
-    House::Location getLocation(const int idx) const;
-    int getIndexOfLocation(const House::Location& loc) const;
-
     void print() const;
+    std::string toString() const;
     friend std::ostream& operator<<(std::ostream& os, const Path& path);
 
 private:
 
-    std::vector<House::Location> vec;
+    std::vector<Step> vec;
 
 };

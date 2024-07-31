@@ -1,66 +1,79 @@
 // Path.cpp
-
 #include "Path.h"
 
-Path::Path(const House::Location start_loc) {
-    vec.push_back(start_loc);
-}
+Path::Path() {}
 
 
-void Path::addEntry(const House::Location loc) {
-    vec.push_back(loc);
+void Path::addEntry(Step dir) {
+    vec.push_back(dir);
 }
 
 size_t Path::getLength() const{
     return vec.size();
 }
 
-House::Location Path::popStep() {
-    if (!vec.empty()) {
-        House::Location last = vec.back();
-        vec.pop_back();
-        return last;
-    }
-    std::cerr << "Popped the first elem in the Path. Big No No." << std::endl;
-    std::exit(EXIT_FAILURE);
-}
-
-House::Location Path::topStep() const {
-    if (!vec.empty()) {
-        return vec.back();
-    }
-    std::cerr << "Popped the first elem in the Path. Big No No." << std::endl;
-    std::exit(EXIT_FAILURE);
-}
-
-void Path::cutPath(const size_t idx){
-    vec = std::vector<House::Location>(vec.begin(), vec.begin() + idx + 1);
-}
-
-House::Location Path::getPrev() const {
-    return vec.end()[-2];
-}
-
-House::Location Path::getLocation(const int idx) const {
-    return vec[idx];
-}
-
-int Path::getIndexOfLocation(const House::Location& loc) const {
-    for (int i = 0; i < static_cast<int>(getLength()); i++)
-    {
-        if (vec[i] == loc) return i;
-    }
-    return -1;
-}
-
 void Path::print() const {
     std::cout << *this;
 }
 
+std::string Path::toString() const {
+    std::string path_chars = "";
+
+    for (Step step : vec) {
+        switch (step)
+        {
+        case Step::North:
+            path_chars += 'N';
+            break;
+        case Step::South:
+            path_chars += 'S';
+            break;
+        case Step::East:
+            path_chars += 'E';
+            break;
+        case Step::West:
+            path_chars += 'W';
+            break;
+        case Step::Stay:
+            path_chars += 's';
+            break;
+        default:
+            path_chars += 'F';
+            break;
+        }
+    }
+
+    return path_chars;
+}
+
 std::ostream& operator<<(std::ostream& os, const Path& path) {
-    os << path.vec[0];
-    for (size_t i = 1; i < path.vec.size(); ++i) {
-        os << " --> " << path.vec[i];
+    for (size_t i = 0; i < path.getLength(); ++i) {
+        char c;
+        switch (path.vec[i])
+        {
+        case Step::North:
+            c = 'N';
+            break;
+        case Step::South:
+            c = 'S';
+            break;
+        case Step::East:
+            c = 'E';
+            break;
+        case Step::West:
+            c = 'W';
+            break;
+        case Step::Stay:
+            c = 's';
+            break;
+        case Step::Finish:
+            c = 'F';
+            break;
+        default:
+            break;
+        }
+
+        os << c;
     }
     os << std::endl;
     return os;

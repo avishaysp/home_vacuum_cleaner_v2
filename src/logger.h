@@ -4,11 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <format>
 
 enum LogLevel {
     INFO,
     WARNING,
-    ERROR
+    FATAL
 };
 
 class Logger {
@@ -16,10 +17,9 @@ public:
     static Logger& getInstance();
 
     void log(LogLevel level, const std::string& message);
-    void setLogFile(const std::string& filename);
 
 private:
-    Logger() : logFile("vacuum_cleaner.log") {}
+    Logger() : logFile("vacuum_cleaner.log"), firstOpen(true) {}
     ~Logger();
 
     Logger(const Logger&) = delete;
@@ -27,6 +27,7 @@ private:
 
     std::ofstream logStream;
     std::string logFile;
+    bool firstOpen;
 
     void openLogFile();
     std::string getLogLevelString(LogLevel level);

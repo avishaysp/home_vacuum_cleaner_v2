@@ -6,17 +6,18 @@
 
 House::House(size_t rows, size_t cols) : mat(rows, std::vector<House::Tile>(cols, House::Tile())), rows(rows), cols(cols) {}
 
-House::Tile& House::getTile(House::Location loc) {
+House::Tile& House::getTile(Location loc) {
     size_t row = loc.getRow();
     size_t col = loc.getCol();
     return getTile(row, col);
 }
 
 House::Tile& House::getTile(size_t row, size_t col) {
+    logger.log(INFO, std::format("House | getTile {},{}", row, col));
     return mat[row][col];
 }
 
-const House::Tile& House::getTile(House::Location loc) const {
+const House::Tile& House::getTile(Location loc) const {
     size_t row = loc.getRow();
     size_t col = loc.getCol();
     return getTile(row, col);
@@ -34,10 +35,22 @@ size_t House::getColsCount() const {
     return cols;
 }
 
+Location House::getDockingStation() const {
+    return docking_station;
+}
+
+void House::setDockingStation(Location docking_loc) {
+    docking_station = docking_loc;
+}
+
 int House::calcTotalDirt() const {
+    logger.log(INFO, "calculating dirt");
     int sum = 0;
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
+            if (mat[i][j].isWall() || mat[i][j].isDockingStation()) {
+                continue;
+            }
             if (mat[i][j].getDirtLevel() > 0) {
                 sum += mat[i][j].getDirtLevel();
             }
@@ -62,55 +75,7 @@ void House::print() const {
     }
 }
 
-/* Location */
 
-House::Location::Location(size_t row, size_t col) : row(row), col(col) {}
-House::Location::Location() : row(0), col(0) {}
-
-
-// Getters for Location
-size_t House::Location::getRow() const {
-    return row;
-}
-
-size_t House::Location::getCol() const {
-    return col;
-}
-
-// Setters for Location
-void House::Location::setRow(size_t row) {
-    this->row = row;
-}
-
-void House::Location::setCol(size_t col) {
-    this->col = col;
-}
-
-void House::Location::setBoth(size_t row, size_t col) {
-    this->row = row;
-    this->col = col;
-}
-
-// Overloaded operators for Location
-bool House::Location::operator==(const House::Location& other) const {
-    return (row == other.row) && (col == other.col);
-}
-
-bool House::Location::operator!=(const House::Location& other) const {
-    return !(*this == other);
-}
-
-std::string House::Location::toString() const {
-    return std::format("({}|{})",this->row, this->col);
-}
-
-std::ostream& operator<<(std::ostream& os, const House::Location& loc) {
-    return os << std::format("({}|{})", loc.row, loc.col);
-}
-
-void House::Location::print() const {
-    std::cout << "(" << (this->row) << "|" << (this->col) << ")" << std::endl;
-}
 
 /* Tile */
 
@@ -135,8 +100,7 @@ void House::Tile::setAsDockingStation() {
 
 int House::Tile::getDirtLevel() const {
     if (type != Open) {
-        logger.log(ERROR, "Tried to get the dirt level of a Wall/Docking tile");
-        std::exit(EXIT_FAILURE);
+        logger.log(FATAL, "Tried to get the dirt level of a Wall/Docking tile");
     }
     return dirt_level;
 }

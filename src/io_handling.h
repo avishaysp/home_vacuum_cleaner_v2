@@ -10,7 +10,7 @@
 #include "house.h"
 #include "Path.h"
 #include "logger.h"
-#include <format>
+#include "status.h"
 
 
 class FileReader {
@@ -19,7 +19,7 @@ class FileReader {
     std::vector<std::string> split(const std::string &str, const char delimiter) const;
     size_t strToSize_t(const std::string &str) const;
     std::string trim(const std::string &str) const;
-    House::Location parseLocation(const std::string& str) const;
+    Location parseLocation(const std::string& str) const;
     size_t readArgument(const std::string& str) const;
     void ParseHouse(std::ifstream &file, std::shared_ptr<House> house) const;
 
@@ -29,7 +29,6 @@ public:
     struct file_reader_output {
         size_t max_battery_steps;
         size_t max_num_of_steps;
-        House::Location docking_loc;
         std::shared_ptr<House> house_map;
     };
 
@@ -42,9 +41,8 @@ class FileWriter {
 public:
     FileWriter(const std::string& file_path);
 
-    void writeHouse(const House& house);
+    void writeNumberOfSteps(const Path& path);
     void writePath(const Path& path);
-    void writedDirt(size_t dirt);
-    void writedBat(size_t battery);
-    void writedAccomplish(size_t dirt, bool isInDock);
+    void writeDirt(size_t dirt);
+    void writeStatus(Status status);
 };

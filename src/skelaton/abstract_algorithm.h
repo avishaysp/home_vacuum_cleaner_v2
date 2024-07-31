@@ -5,7 +5,7 @@
 
 #include "enums.h"
 #include "battery_meter.h"
-#include "wall_sensor.h"
+#include "walls_sensor.h"
 #include "dirt_sensor.h"
 
 

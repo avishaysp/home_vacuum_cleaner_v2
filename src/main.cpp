@@ -1,14 +1,24 @@
 // main.cpp
 #include "logger.h"
 #include "io_handling.h"
-// #include "Simulation.h"
+#include "simulator.h"
+#include "speedom_algorithm.h"
 
-int main() {
-    logger.log(INFO, "~~~~~~~~~~~~~~~~~~~~~~~ Vacuum Cleaner ~~~~~~~~~~~~~~~~~~~~~~~");
-    std::string input_file_path = "input_a.txt";
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        logger.log(FATAL, std::format("one argument required - inputfile, got {}", int(argc - 1)));
+    }
+
+    std::string input_file_path = argv[1];
     std::string output_file_path = "output_" + input_file_path;
-    FileReader fr(input_file_path);
-    FileReader::file_reader_output args = fr.readFile();
-    args.house_map->print();
+
+    Simulator simulator;
+    simulator.readHouseFile(input_file_path);
+
+    simulator.setAlgorithm(std::make_shared<SpeedomAlgorithm>());
+    simulator.run();
+
     return EXIT_SUCCESS;
+
+
 }

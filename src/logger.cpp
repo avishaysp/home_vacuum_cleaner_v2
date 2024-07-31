@@ -1,6 +1,7 @@
 #include "logger.h"
 #include <ctime>
 #include <iomanip>
+#include <format>
 
 Logger& Logger::getInstance() {
     static Logger instance;
@@ -19,14 +20,9 @@ void Logger::log(LogLevel level, const std::string& message) {
     } else {
         std::cerr << "Unable to write to log file: " << logFile << std::endl;
     }
-}
-
-void Logger::setLogFile(const std::string& filename) {
-    logFile = filename;
-    if (logStream.is_open()) {
-        logStream.close();
+    if (level == FATAL) {
+        std::exit(EXIT_FAILURE);
     }
-    openLogFile();
 }
 
 Logger::~Logger() {
@@ -36,7 +32,12 @@ Logger::~Logger() {
 }
 
 void Logger::openLogFile() {
-    logStream.open(logFile, std::ios_base::app);
+    if (firstOpen) {
+        logStream.open(logFile, std::ios_base::out | std::ios_base::trunc);
+        firstOpen = false;
+    } else {
+        logStream.open(logFile, std::ios_base::out | std::ios_base::app);
+    }
     if (!logStream.is_open()) {
         std::cerr << "Failed to open log file: " << logFile << std::endl;
     }
@@ -48,8 +49,8 @@ std::string Logger::getLogLevelString(LogLevel level) {
             return "INFO";
         case WARNING:
             return "WARNING";
-        case ERROR:
-            return "ERROR";
+        case FATAL:
+            return "FATAL";
         default:
             return "UNKNOWN";
     }
