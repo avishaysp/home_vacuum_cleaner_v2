@@ -45,7 +45,7 @@ private:
             size_t dirt_level;
             bool visited;
             size_t distance_from_current;
-            std::optional<Location> father_from_chosen; //TODO: could be removed
+            std::optional<Location> father_from_chosen;
             size_t distance_from_docking_station;
             std::optional<Location> father_from_docking;
             std::vector<Location> neighbors;
@@ -55,9 +55,10 @@ private:
         Location& starting_location;
         Location& current_location;
 
-       std::unordered_map<Location, tile_stats, AlgorithmLocationHash, AlgorithmLocationEqual> internal_graph;
+        std::unordered_map<Location, tile_stats, AlgorithmLocationHash, AlgorithmLocationEqual> internal_graph;
 
         size_t calculateTravelDistance(Location loc) const;
+        bool reachableFromDocking(const Location& loc, size_t current_battery, size_t max_steps) const;
 
         bool isInNeighbors(const std::vector<Location>& locations,
                             Location loc) const;
@@ -83,8 +84,7 @@ private:
         void updateGraph(size_t dirt_level, const std::vector<Location>& possible_Locations);
 
         std::pair<size_t, Location> minimalDistanceLocation() const;
-
-        std::string toString() const;
+        bool cleanedReachableHouse(size_t battery_size, size_t max_steps) const;
 
     };
 
@@ -109,8 +109,6 @@ private:
     Step calculateNextStep();
 
 public:
-    using AlgoLoc = Location;
-
     SpeedomAlgorithm();
 
     void setMaxSteps(size_t max_steps) override;

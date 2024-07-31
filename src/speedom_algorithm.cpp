@@ -4,7 +4,7 @@
 SpeedomAlgorithm::SpeedomAlgorithm() :
     max_steps(0),
     battery_size(0),
-    starting_location(AlgoLoc()),
+    starting_location(Location()),
     current_location(starting_location),
     walls_sensor(),
     dirt_sensor(),
@@ -45,12 +45,15 @@ Step SpeedomAlgorithm::updateCurrentLocAndGetNextStep(InternalHouse::LocationTyp
 
 Step SpeedomAlgorithm::calculateNextStep() {
     logger.log(INFO, "Speedom Algorithm | nextStep");
-    std::vector<AlgoLoc> possibleLocations = getPossibleLocations();
+    std::vector<Location> possibleLocations = getPossibleLocations();
     size_t battery_level = battery_meter->getBatteryState();
     size_t dirt_level = current_location == starting_location ? 0 : dirt_sensor->dirtLevel();
     logger.log(INFO, std::format("Speedom | current_location: {}, battery_level: {}, dirt_level: {}", current_location.toString(), battery_level, dirt_level));
 
     internal_house.updateGraph(dirt_level, possibleLocations);
+    if ((current_location == starting_location) && (internal_house.cleanedReachableHouse(battery_size, max_steps))) {
+        return Step::Finish;
+    }
     if ((current_location == starting_location) && (battery_level < battery_size)) {
         return Step::Stay;
     }
@@ -71,6 +74,10 @@ Step SpeedomAlgorithm::calculateNextStep() {
             return Step::Stay;
         }
 
+        return updateCurrentLocAndGetNextStep(InternalHouse::DOCKING);
+    }
+
+    if (internal_house.cleanedReachableHouse(battery_size, max_steps)) {
         return updateCurrentLocAndGetNextStep(InternalHouse::DOCKING);
     }
 
@@ -197,12 +204,12 @@ void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::
     internal_graph.at(current_location).dirt_level = dirt_level;
     if(internal_graph.at(current_location).visited) {
         return;
-    }    
+    }
     internal_graph.at(current_location).visited = true;
     internal_graph.at(current_location).neighbors = possible_Locations;
     for (auto& loc : possible_Locations) {
         if (!internal_graph.contains(loc)){
-            internal_graph[loc] = {0, false, 0, std::nullopt, 0, std::nullopt, std::vector<Location>()};    
+            internal_graph[loc] = {0, false, 0, std::nullopt, 0, std::nullopt, std::vector<Location>()};
         }
         if (!isInNeighbors(internal_graph.at(loc).neighbors, current_location)) {
             internal_graph.at(loc).neighbors.push_back(current_location);
@@ -243,5 +250,24 @@ size_t SpeedomAlgorithm::InternalHouse::calculateTravelDistance(Location loc) co
 
     return internal_graph.at(loc).distance_from_docking_station + internal_graph.at(loc).distance_from_current;
 
+
+}
+
+
+bool SpeedomAlgorithm::InternalHouse::cleanedReachableHouse(size_t battery_size, size_t max_steps) const {
+    for (auto& pair : internal_graph) {
+        if (pair.second.visited && !pair.second.dirt_level) {
+            continue;
+        }
+        if (!reachableFromDocking(pair.first, battery_size, max_steps)) {
+            continue;
+        }
+        return false;
+    }
+    return true;
+}
+
+bool SpeedomAlgorithm::InternalHouse::reachableFromDocking(const Location& loc, size_t battery_size, size_t max_steps) const {
+    return (1 + 2 * internal_graph.at(loc).distance_from_docking_station) <= std::min(battery_size, max_steps);
 
 }
