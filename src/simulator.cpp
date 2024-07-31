@@ -65,7 +65,7 @@ void Simulator::setDirtSensor() {
     dirt_sensor.setHouse(house);
 }
 
-void Simulator::enableVisualizatio() {
+void Simulator::enableVisualization() {
     enable_live_visualization = true;
 }
 
@@ -166,6 +166,7 @@ void Simulator::run() {
 
     logger.log(INFO, "Simulator | Prepering output file");
     std::string output_file = addOutputPrefixToFilename(input_file);
+    logger.log(INFO, std::format("Simulator | input file: {}, output file: {}", input_file, output_file));
     writeToOutputFile(final_status, output_file);
 }
 

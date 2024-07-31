@@ -25,7 +25,7 @@ public:
 
     void run();
 
-    void enableVisualizatio();
+    void enableVisualization();
 
     const Path& getPath() const;
     size_t getHistoryLength() const;
