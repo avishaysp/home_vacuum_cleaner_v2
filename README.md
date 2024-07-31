@@ -8,29 +8,32 @@ To clean bin files:
 
 ## Description
 The program recives as an argument a file containing:
-1. maximum steps allowed on a signle charge of the battery.
-2. maximum steps allowed on the run.
-3. coordinates of the docking location, which is also the starting point.
+1. maximum steps allowed on the run.
+2. maximum steps allowed on a signle charge of the battery.
+3. Size of the house.
 4. map of the house, as the format below.
 
-Writes to the output file the cleaned house.
+Writes to the output file the result.
 
 
 ## Example input
-20,100,(1|1)
-+ +-+-+-+
- /|3 2 0|
-+-+ + + +
-|5 0 / 2|
-+-+-+-+-+
+1. stam house
+MaxSteps = 200
+MaxBattery=30
+Rows = 4
+Cols =10
+WWWW
+W D
+W 123456789
 
-# Legend
-'+' = a cross of walls. must be present o all even indecies.
-' ' = a coridor posible to pass through
-'/' = a tile where there is no indoor flor (e.g. balcony)
-'3' = a tile with dirt level 3
-'-' = horizontal wall
-'|' = vertical wall
+# The vacuum cleaner see the house as:
+WWWWWWWWWWWW
+WWWWW      W
+WW D       W
+WW 12345678W
+W          W
+WWWWWWWWWWWW
+
 
 ## Run
 
