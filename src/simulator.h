@@ -25,6 +25,8 @@ public:
 
     void run();
 
+    void enableVisualization();
+
     const Path& getPath() const;
     size_t getHistoryLength() const;
 
@@ -41,6 +43,8 @@ private:
     DirtSensorImp dirt_sensor;
     std::shared_ptr<SpeedomAlgorithm> algo;
     size_t delta_battery;
+    bool enable_live_visualization;
+    std::string input_file;
 
     void setBatterySize(const size_t battery_size);
     void setCurrestBattery();
@@ -57,6 +61,7 @@ private:
     void addToHistory(Step step);
     void updateDirtLevel();
 
-    void writeToOutputFile(Status status);
+    void writeToOutputFile(Status status, std::string output_file);
+    std::string addOutputPrefixToFilename(const std::string& path) const;
 
 };

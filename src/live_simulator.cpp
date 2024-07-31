@@ -12,18 +12,18 @@ LiveSimulator& LiveSimulator::getInstance() {
 
 LiveSimulator::~LiveSimulator() {}
 
-void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step, bool is_docking) {
+void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step, bool is_docking, size_t remaining_steps, size_t current_battery) const{
     logger.log(INFO, "Start waiting for 0.5 second");
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
     logger.log(INFO, "Printing house");
-    printHouseForSimulator(house, curr_location, step, is_docking);
+    printHouseForSimulator(house, curr_location, step, is_docking, remaining_steps, current_battery);
     if (step == Step::Finish) {
         std::cout << "Cleaning has Finished, Exit Simulation" << std::endl;
     }
 }
 
 
-void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc, Step step, bool is_docking) {
+void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc, Step step, bool is_docking, size_t remaining_steps, size_t current_battery) const{
     std::cout << "\033[2J\033[1;1H";
 
     size_t house_rows = house.getRowsCount();
@@ -85,14 +85,21 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
         std::cout << std::endl;
     }
     printWallsLine(colsOfHouse);
+    printRemainingStepsAndCurrentBattery(remaining_steps, current_battery);
 
 }
 
-void LiveSimulator::printWallsLine(const size_t colsOfHouse) {
+void LiveSimulator::printWallsLine(const size_t colsOfHouse) const{
     for (size_t i = 0; i < colsOfHouse; i++) {
         std::cout << 'W';
     }
     std::cout << std::endl;
+}
+
+void LiveSimulator::printRemainingStepsAndCurrentBattery(size_t remaining_steps, size_t current_battery) const {
+    std::cout << std::endl;
+    std::cout << "Remaining Steps: " << remaining_steps << std::endl;
+    std::cout << "Current Battery: " << current_battery << std::endl;
 }
 
 
