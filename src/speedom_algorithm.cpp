@@ -51,10 +51,8 @@ Step SpeedomAlgorithm::calculateNextStep() {
     logger.log(INFO, std::format("Speedom | current_location: {}, battery_level: {}, dirt_level: {}", current_location.toString(), battery_level, dirt_level));
 
     internal_house.updateGraph(dirt_level, possibleLocations);
-    if ((current_location == starting_location) && (internal_house.cleanedReachableHouse(battery_size, max_steps))) {
-        return Step::Finish;
-    }
-    if ((current_location == starting_location) && (battery_level < battery_size)) {
+
+    if (current_location == starting_location && battery_level < battery_size) {
         return Step::Stay;
     }
 
@@ -206,6 +204,7 @@ void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::
     if(internal_graph.at(current_location).visited) {
         return;
     }
+    logger.log(INFO, "Speedom Algorithm | after verifying visited");
     internal_graph.at(current_location).visited = true;
     internal_graph.at(current_location).neighbors = possible_Locations;
     for (auto& loc : possible_Locations) {
