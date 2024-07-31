@@ -43,8 +43,7 @@ Step SpeedomAlgorithm::updateCurrentLocAndGetNextStep(InternalHouse::LocationTyp
     return step;
 }
 
-Step SpeedomAlgorithm::nextStep() {
-
+Step SpeedomAlgorithm::calculateNextStep() {
     logger.log(INFO, "Speedom Algorithm | nextStep");
     std::vector<AlgoLoc> possibleLocations = getPossibleLocations();
     size_t battery_level = battery_meter->getBatteryState();
@@ -83,6 +82,16 @@ Step SpeedomAlgorithm::nextStep() {
     }
     internal_house.bfs(InternalHouse::CHOSEN, chosen_location);
     return updateCurrentLocAndGetNextStep(InternalHouse::CHOSEN);
+}
+
+
+Step SpeedomAlgorithm::nextStep() {
+    Step next_step = calculateNextStep();
+    if (next_step != Step::Finish) {
+        max_steps--;
+    }
+
+    return next_step;
 }
 
 

@@ -106,6 +106,8 @@ private:
 
     Step updateCurrentLocAndGetNextStep(InternalHouse::LocationType target);
 
+    Step calculateNextStep();
+
 public:
     using AlgoLoc = Location;
 
