@@ -15,6 +15,13 @@ The program recives as an argument a file containing:
 
 Writes to the output file the result.
 
+## Algorithm
+
+In general, the algoritm stays and clean the current tile until it's clean or he has to return to charge.
+The house is mapped into a graph on the go.
+When he finished cleaning and has enough battery, he searches in the graph for the tile that is either dirty or yet to be visited, with the shortest travel time to him and than to the station.
+He returns to dock when finished mapping the house and can't clean any more of it, or becouse of max_step.
+
 
 ## Example input
 1. stam house
