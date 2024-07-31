@@ -13,16 +13,20 @@ Simulator::Simulator()
       battery_meter(current_battery),
       dirt_sensor(current_location),
       algo(nullptr),
-      delta_battery(0) {}
+      delta_battery(0),
+      enable_live_visualization(false),
+      input_file("")
+      {}
 
 void Simulator::readHouseFile(const std::string input_file_path) {
+    input_file = input_file_path;
     FileReader fr(input_file_path);
     FileReader::file_reader_output args = fr.readFile();
     setProperties(args.max_num_of_steps, args.max_battery_steps, args.house_map);
 }
 
-void Simulator::writeToOutputFile(Status status) {
-    FileWriter fw("output.txt");
+void Simulator::writeToOutputFile(Status status, std::string output_file) {
+    FileWriter fw(output_file);
     fw.writeNumberOfSteps(history_path);
     fw.writeDirt(house->calcTotalDirt());
     fw.writeStatus(status);
@@ -61,6 +65,10 @@ void Simulator::setDirtSensor() {
     dirt_sensor.setHouse(house);
 }
 
+void Simulator::enableVisualizatio() {
+    enable_live_visualization = true;
+}
+
 void Simulator::setAlgorithm(std::shared_ptr<SpeedomAlgorithm> alg) {
     alg->setWallsSensor(walls_sensor);
     alg->setDirtSensor(dirt_sensor);
@@ -96,6 +104,16 @@ size_t Simulator::getHistoryLength() const {
     return history_path.getLength();
 }
 
+std::string Simulator::addOutputPrefixToFilename(const std::string& path) const {
+    std::size_t lastSlashPos = path.find_last_of('/');
+    
+    std::string directory = (lastSlashPos == std::string::npos) ? "" : path.substr(0, lastSlashPos + 1);
+    std::string filename = (lastSlashPos == std::string::npos) ? path : path.substr(lastSlashPos + 1);
+    
+    std::string newFilename = "output_" + filename;
+    
+    return directory + newFilename;
+}
 
 void Simulator::run() {
     Step step;
@@ -133,18 +151,22 @@ void Simulator::run() {
         else {
             logger.log(INFO, "Simulator | Simulator successfully finished running ");
             addToHistory(step);
-            live_simulator.simulate(*house, current_location, step, false);
+            if (enable_live_visualization) {
+                live_simulator.simulate(*house, current_location, step, false, (max_steps - 1) - i, current_battery / 100);
+            }
             final_status = Status::FINISH;
             break;
         }
 
         addToHistory(step);
-        live_simulator.simulate(*house, current_location, step, current_location == house->getDockingStation());
+        if (enable_live_visualization) {
+            live_simulator.simulate(*house, current_location, step, current_location == house->getDockingStation(), (max_steps - 1) - i, current_battery / 100);
+        }
     }
 
     logger.log(INFO, "Simulator | Prepering output file");
-
-    writeToOutputFile(final_status);
+    std::string output_file = addOutputPrefixToFilename(input_file);
+    writeToOutputFile(final_status, output_file);
 }
 
 void Simulator::updateDirtLevel() {
