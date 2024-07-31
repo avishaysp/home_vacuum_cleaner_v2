@@ -1,0 +1,4 @@
+NumSteps:10
+DirtLeft:249
+FINISHED
+EENWWSsSsNF

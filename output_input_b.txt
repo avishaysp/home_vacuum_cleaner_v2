@@ -1,0 +1,4 @@
+NumSteps:90
+DirtLeft:27
+FINISHED
+EEEWSsssWssWsWNEssssssssssssssssEEESssssNEEEWWWWWWssssssssssssssssssEEESEsssssEsssWWWWWNFFF
