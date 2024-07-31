@@ -151,7 +151,6 @@ void Simulator::run() {
 
         else {
             logger.log(INFO, "Simulator | Simulator successfully finished running ");
-            addToHistory(step);
             if (enable_live_visualization) {
                 live_simulator.simulate(*house, current_location, step, false, (max_steps - 1) - i, current_battery / 100);
             }
@@ -166,7 +165,7 @@ void Simulator::run() {
         }
     }
 
-    if (current_location == house->getDockingStation() && algo->nextStep() == Step::Finish) {
+    if (final_status != Status::FINISH && current_location == house->getDockingStation() && algo->nextStep() == Step::Finish) {
         final_status = Status::FINISH;
         addToHistory(Step::Finish);
     }

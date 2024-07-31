@@ -1,4 +1,4 @@
-NumSteps:90
+NumSteps:88
 DirtLeft:27
 FINISHED
-EEEWSsssWssWsWNEssssssssssssssssEEESssssNEEEWWWWWWssssssssssssssssssEEESEsssssEsssWWWWWNFFF
+EEEWSsssWssWsWNEssssssssssssssssEEESssssNEEEWWWWWWssssssssssssssssssEEESEsssssEsssWWWWWNF
