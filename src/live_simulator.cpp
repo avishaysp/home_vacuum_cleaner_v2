@@ -12,18 +12,18 @@ LiveSimulator& LiveSimulator::getInstance() {
 
 LiveSimulator::~LiveSimulator() {}
 
-void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step) {
+void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step, bool is_docking) {
     logger.log(INFO, "Start waiting for 0.5 second");
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     logger.log(INFO, "Printing house");
-    printHouseForSimulator(house, curr_location, step);
+    printHouseForSimulator(house, curr_location, step, is_docking);
     if (step == Step::Finish) {
         std::cout << "Cleaning has Finished, Exit Simulation" << std::endl;
     }
 }
 
 
-void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc, Step step) {
+void LiveSimulator::printHouseForSimulator(const House& house, const Location& current_loc, Step step, bool is_docking) {
     std::cout << "\033[2J\033[1;1H";
 
     size_t house_rows = house.getRowsCount();
@@ -36,7 +36,11 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
     for (size_t i = 0; i < house_rows; i++) {
         if ((i == curr_row) && (curr_col == 0)) {
             if (step == Step::Stay){
-                std::cout << "W<";
+                if (is_docking) {
+                        std::cout << "W{";
+                    } else {
+                        std::cout << "W<";
+                    }
             } else {
                 std::cout << "W[";
             }
@@ -54,14 +58,22 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
             }
             if ((i == curr_row) && (j == curr_col - 1)) {
                 if (step == Step::Stay){
-                    std::cout << "<";
+                    if (is_docking) {
+                        std::cout << "{";
+                    } else {
+                        std::cout << "<";
+                    }
                 } else {
                     std::cout << "[";
                 }
             } 
             else if ((i == curr_row) && (j == curr_col)) {
                 if (step == Step::Stay){
-                    std::cout << ">";
+                    if (is_docking) {
+                        std::cout << "}";
+                    } else {
+                        std::cout << ">";
+                    }
                 } else {
                     std::cout << "]";
                 }
@@ -73,6 +85,7 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
         std::cout << std::endl;
     }
     printWallsLine(colsOfHouse);
+
 }
 
 void LiveSimulator::printWallsLine(const size_t colsOfHouse) {

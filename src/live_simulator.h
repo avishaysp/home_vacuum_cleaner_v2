@@ -10,7 +10,7 @@ class LiveSimulator {
 public:
     static LiveSimulator& getInstance();
 
-    void simulate(const House& house, const Location& curr_location, Step step);
+    void simulate(const House& house, const Location& curr_location, Step step, bool is_docking);
 
 private:
     LiveSimulator() {}
@@ -19,7 +19,7 @@ private:
     LiveSimulator(const LiveSimulator&) = delete;
     LiveSimulator& operator=(const LiveSimulator&) = delete;
 
-    void printHouseForSimulator(const House& house, const Location& current_loc, Step step);
+    void printHouseForSimulator(const House& house, const Location& current_loc, Step step, bool is_docking);
     void printWallsLine(const size_t colsOfHouse);
 
     std::ofstream simulatorStream;

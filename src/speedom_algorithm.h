@@ -69,7 +69,6 @@ private:
 
         InternalHouse(Location& start_loc, Location& curr_loc)
             : starting_location(start_loc), current_location(curr_loc) {
-                logger.log(INFO, "InternalHouse C'tor");
                 internal_graph[start_loc] =
                 {
                     0, false, 0, std::nullopt, 0, std::nullopt, std::vector<Location>()
@@ -85,12 +84,13 @@ private:
 
         std::pair<size_t, Location> minimalDistanceLocation() const;
 
+        std::string toString() const;
 
     };
 
     std::size_t max_steps;
 
-    const size_t battery_size;
+    size_t battery_size;
     Location starting_location;
 
     Location current_location;
@@ -115,6 +115,7 @@ public:
     void setWallsSensor(const WallsSensor&) override;
     void setDirtSensor(const DirtSensor&) override;
     void setBatteryMeter(const BatteryMeter&) override;
+    void setBatterySize(size_t battery_size);
     Step nextStep() override;
 
 };

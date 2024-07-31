@@ -198,7 +198,6 @@ void FileWriter::writePath(const Path& path) {
         std::cout << "Could not open file for writing" << std::endl;
     }
     file << path.toString();
-    file << "Total number of steps performed: " << (path.getLength() - 1) << std::endl;
 
     file.close();
 }
