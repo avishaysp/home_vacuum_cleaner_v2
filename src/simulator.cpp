@@ -122,7 +122,7 @@ void Simulator::run() {
     for (size_t i = 0; i < max_steps; ++i) {
 
         if ((current_location != house->getDockingStation()) && current_battery <= 0) {
-            logger.log(FATAL, "Simulator | Battery level is empty, Can not continue cleaning");
+            logger.log(WARNING, "Simulator | Battery level is empty, Can not continue cleaning");
             final_status = Status::DEAD;
             break;
         }
@@ -131,7 +131,7 @@ void Simulator::run() {
 
         if ((step == Step::Stay) && (current_location == house->getDockingStation())) {
             if (current_battery == battery_size) {
-                logger.log(FATAL, "Simulator | Stayed in docking station even though battary is full. Inappropriate behavior.");
+                logger.log(WARNING, "Simulator | Stayed in docking station even though battary is full. Inappropriate behavior.");
             }
             current_battery = std::min(current_battery + delta_battery, battery_size);
             logger.log(INFO, std::format("Simulator | New battery after charging {}", current_battery / 100));
