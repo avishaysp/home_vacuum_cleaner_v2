@@ -106,12 +106,12 @@ size_t Simulator::getHistoryLength() const {
 
 std::string Simulator::addOutputPrefixToFilename(const std::string& path) const {
     std::size_t lastSlashPos = path.find_last_of('/');
-    
+
     std::string directory = (lastSlashPos == std::string::npos) ? "" : path.substr(0, lastSlashPos + 1);
     std::string filename = (lastSlashPos == std::string::npos) ? path : path.substr(lastSlashPos + 1);
-    
+
     std::string newFilename = "output_" + filename;
-    
+
     return directory + newFilename;
 }
 
