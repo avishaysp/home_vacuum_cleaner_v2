@@ -39,6 +39,15 @@ private:
             CHOSEN,
         };
 
+        static std::string locationTypetoString(LocationType type) {
+            switch (type) {
+                case DOCKING: return "DOCKING";
+                case CURRENT: return "CURRENT";
+                case CHOSEN: return "CHOSEN";
+                default: return "UNKNOWN";
+            }
+        }
+
     private:
 
         struct tile_stats {

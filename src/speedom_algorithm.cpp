@@ -33,7 +33,7 @@ void SpeedomAlgorithm::setBatterySize(size_t battery_size){
 }
 
 bool SpeedomAlgorithm::isFeasible(size_t travel_distance, size_t current_battery) const {
-    logger.log(INFO, std::format("Speedom Algorithm | isFeasible travel distance: {}, current battery: {}, max steps: {}", travel_distance, current_battery, max_steps));
+    logger.log(INFO, std::format("SpeedomAlgorithm | isFeasible travel distance: {}, current battery: {}, max steps: {}", travel_distance, current_battery, max_steps));
     return travel_distance + 1 <= std::min(current_battery, max_steps);
 }
 
@@ -44,7 +44,7 @@ Step SpeedomAlgorithm::updateCurrentLocAndGetNextStep(InternalHouse::LocationTyp
 }
 
 Step SpeedomAlgorithm::calculateNextStep() {
-    logger.log(INFO, "Speedom Algorithm | nextStep");
+    logger.log(INFO, "SpeedomAlgorithm | nextStep");
     std::vector<Location> possibleLocations = getPossibleLocations();
     size_t battery_level = battery_meter->getBatteryState();
     size_t dirt_level = current_location == starting_location ? 0 : dirt_sensor->dirtLevel();
@@ -70,7 +70,7 @@ Step SpeedomAlgorithm::calculateNextStep() {
     }
 
     if (dirt_level) {
-        if (battery_level > internal_house.getDistanceToDoc(current_location)) {
+        if (std::min(battery_level, max_steps) > internal_house.getDistanceToDoc(current_location)) {
             return Step::Stay;
         }
 
@@ -104,7 +104,7 @@ Step SpeedomAlgorithm::nextStep() {
 
 
 std::vector<Location> SpeedomAlgorithm::getPossibleLocations() const {
-    logger.log(INFO, "Speedom Algorithm | getPossibleLocations");
+    logger.log(INFO, "SpeedomAlgorithm | getPossibleLocations");
     std::vector<Location> possible_Locations;
     int curr_row = current_location.getRow();
     int curr_col = current_location.getCol();
@@ -124,7 +124,8 @@ std::vector<Location> SpeedomAlgorithm::getPossibleLocations() const {
 }
 
 void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<Location> chosen_location) {
-    logger.log(INFO,"Speedom Algorithm | started BFS");
+
+    logger.log(INFO, std::format("SpeedomAlgorithm | started BFS from {}", locationTypetoString(start)));
     std::queue<Location> q;
     std::unordered_set<Location> bfsVisited;
 
@@ -174,7 +175,7 @@ void SpeedomAlgorithm::InternalHouse::bfs(LocationType start, std::optional<Loca
 
 
 size_t SpeedomAlgorithm::InternalHouse::getDistanceToDoc(Location other_location) const {
-    logger.log(INFO, "Speedom Algorithm | getDistanceToDoc");
+    logger.log(INFO, "SpeedomAlgorithm | getDistanceToDoc");
     return internal_graph.at(other_location).distance_from_docking_station;
 }
 
@@ -185,7 +186,7 @@ Location SpeedomAlgorithm::InternalHouse::getNextLocationToTarget(InternalHouse:
 
 std::pair<Step, Location> SpeedomAlgorithm::InternalHouse::calcStepToTarget(InternalHouse::LocationType target) const {
     Location next = getNextLocationToTarget(target);
-       logger.log(INFO, std::format("Speedom Algorithm | calcStepToTarget, next location : {}", next.toString()));
+       logger.log(INFO, std::format("SpeedomAlgorithm | calcStepToTarget, next location : {}", next.toString()));
     if (next.getRow() > current_location.getRow()){
         return std::make_pair(Step::South, next);
     }
@@ -200,7 +201,7 @@ std::pair<Step, Location> SpeedomAlgorithm::InternalHouse::calcStepToTarget(Inte
 }
 
 void SpeedomAlgorithm::InternalHouse::updateGraph(size_t dirt_level, const std::vector<Location>& possible_Locations) {
-    logger.log(INFO, "Speedom Algorithm | updateGraph");
+    logger.log(INFO, "SpeedomAlgorithm | updateGraph");
     internal_graph.at(current_location).dirt_level = dirt_level;
     if(internal_graph.at(current_location).visited) {
         return;
