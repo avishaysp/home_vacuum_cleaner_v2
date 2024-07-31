@@ -124,6 +124,7 @@ void Simulator::run() {
         if ((current_location != house->getDockingStation()) && current_battery <= 0) {
             logger.log(WARNING, "Simulator | Battery level is empty, Can not continue cleaning");
             final_status = Status::DEAD;
+            addToHistory(step);
             break;
         }
 
@@ -155,6 +156,7 @@ void Simulator::run() {
                 live_simulator.simulate(*house, current_location, step, false, (max_steps - 1) - i, current_battery / 100);
             }
             final_status = Status::FINISH;
+            addToHistory(step);
             break;
         }
 
@@ -162,6 +164,11 @@ void Simulator::run() {
         if (enable_live_visualization) {
             live_simulator.simulate(*house, current_location, step, current_location == house->getDockingStation(), (max_steps - 1) - i, current_battery / 100);
         }
+    }
+
+    if (current_location == house->getDockingStation() && algo->nextStep() == Step::Finish) {
+        final_status = Status::FINISH;
+        addToHistory(Step::Finish);
     }
 
     logger.log(INFO, "Simulator | Prepering output file");
@@ -217,7 +224,7 @@ void Simulator::move(Step step) {
             break;
     }
     if (house->getTile(next_loc).isWall()) {
-        logger.log(FATAL, "Tried to move West from most west col");
+        logger.log(FATAL, "Tried to move into a wall");
     }
     logger.log(INFO, std::format("Simulator | Move to location {}", next_loc.toString()));
     current_location = next_loc;
