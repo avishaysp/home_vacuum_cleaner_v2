@@ -65,7 +65,7 @@ void Simulator::setDirtSensor() {
     dirt_sensor.setHouse(house);
 }
 
-void Simulator::enableVisualizatio() {
+void Simulator::enableVisualization() {
     enable_live_visualization = true;
 }
 
