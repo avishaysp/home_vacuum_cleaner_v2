@@ -67,7 +67,7 @@ private:
         std::unordered_map<Location, tile_stats, AlgorithmLocationHash, AlgorithmLocationEqual> internal_graph;
 
         size_t calculateTravelDistance(Location loc) const;
-        bool reachableFromDocking(const Location& loc, size_t current_battery, size_t max_steps) const;
+        bool reachableFromCurrent(const Location& loc, size_t current_battery, size_t max_steps, InternalHouse::LocationType start) const;
 
         bool isInNeighbors(const std::vector<Location>& locations,
                             Location loc) const;
@@ -93,7 +93,7 @@ private:
         void updateGraph(size_t dirt_level, const std::vector<Location>& possible_Locations);
 
         std::pair<size_t, Location> minimalDistanceLocation() const;
-        bool cleanedReachableHouse(size_t battery_size, size_t max_steps) const;
+        bool cleanedReachableHouse(size_t battery_size, size_t max_steps, InternalHouse::LocationType start) const;
 
     };
 
