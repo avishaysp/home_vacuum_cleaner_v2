@@ -146,6 +146,7 @@ void Simulator::run() {
 
         else if (step != Step::Finish) {
             move(step);
+            house->getTile(current_location).setVisited();
             current_battery -= 100;
         }
 

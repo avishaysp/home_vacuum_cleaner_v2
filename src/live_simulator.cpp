@@ -4,6 +4,9 @@
 #include <format>
 #include <thread>
 
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+
 
 LiveSimulator& LiveSimulator::getInstance() {
     static LiveSimulator instance;
@@ -13,7 +16,11 @@ LiveSimulator& LiveSimulator::getInstance() {
 LiveSimulator::~LiveSimulator() {}
 
 void LiveSimulator::simulate(const House& house, const Location& curr_location, Step step, bool is_docking, size_t remaining_steps, size_t current_battery) const{
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    if (remaining_steps > 10){
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    } else {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
     logger.log(INFO, "LiveSimulator | Printing house");
     printHouseForSimulator(house, curr_location, step, is_docking, remaining_steps, current_battery);
     if (step == Step::Finish) {
@@ -36,24 +43,28 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
         if ((i == curr_row) && (curr_col == 0)) {
             if (step == Step::Stay){
                 if (is_docking) {
-                        std::cout << "W{";
+                        std::cout << "\033[31m" << "W" << "\033[0m" << "{";
                     } else {
-                        std::cout << "W<";
+                        std::cout << "\033[31m" << "W" << "\033[0m" << "<";
                     }
             } else {
-                std::cout << "W[";
+                std::cout << "\033[31m" << "W" << "\033[0m" << "[";
             }
         } else {
-            std::cout << "W ";
+            std::cout << "\033[31m" << "W" << "\033[0m" << " ";
         }
         for (size_t j = 0; j < house_cols; j++) {
             House::Tile tile = house.getTile(i, j);
             if (tile.isDockingStation()) {
-                std::cout << 'D';
+                std::cout << "\033[32m" << 'D' << "\033[0m";
             } else if (tile.isWall()) {
-                std::cout << 'W';
+                std::cout << "\033[31m" << "W" << "\033[0m";
             } else {
-                std::cout << tile.getDirtLevel();
+                if (tile.getVisited()){
+                    std::cout << "\033[34m" << tile.getDirtLevel() << "\033[0m";
+                } else {
+                    std::cout << tile.getDirtLevel();
+                }
             }
             if ((i == curr_row) && (j == curr_col - 1)) {
                 if (step == Step::Stay){
@@ -80,7 +91,7 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
                 std::cout << ' ';
             }
         }
-        std::cout << 'W';
+        std::cout << "\033[31m" << "W" << "\033[0m";
         std::cout << std::endl;
     }
     printWallsLine(colsOfHouse);
@@ -89,9 +100,11 @@ void LiveSimulator::printHouseForSimulator(const House& house, const Location& c
 }
 
 void LiveSimulator::printWallsLine(const size_t colsOfHouse) const{
+    std::cout << "\033[31m";
     for (size_t i = 0; i < colsOfHouse; i++) {
         std::cout << 'W';
     }
+    std::cout << "\033[0m";
     std::cout << std::endl;
 }
 
