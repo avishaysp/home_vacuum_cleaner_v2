@@ -32,11 +32,6 @@ void SpeedomAlgorithm::setBatterySize(size_t battery_size){
     this->battery_size = battery_size;
 }
 
-bool SpeedomAlgorithm::isFeasible(size_t travel_distance, size_t current_battery) const {
-    logger.log(INFO, std::format("SpeedomAlgorithm | isFeasible travel distance: {}, current battery: {}, max steps: {}", travel_distance, current_battery, max_steps));
-    return travel_distance + 1 <= std::min(current_battery, max_steps);
-}
-
 Step SpeedomAlgorithm::updateCurrentLocAndGetNextStep(InternalHouse::LocationType target) {
     auto [step, next_location] = internal_house.calcStepToTarget(target);
     current_location = next_location;
@@ -62,8 +57,8 @@ Step SpeedomAlgorithm::calculateNextStep() {
     internal_house.bfs(InternalHouse::DOCKING, std::nullopt);
 
     if (current_location == starting_location) {
-        auto [travel_dist_to_chosen, chosen_location] = internal_house.minimalDistanceLocation();
-        if (!isFeasible(travel_dist_to_chosen, battery_level)) {
+        auto [isEmpty, chosen_location] = internal_house.minimalDistanceLocation(battery_level, max_steps);
+        if (isEmpty) {
             return Step::Finish;
         }
         internal_house.bfs(InternalHouse::CHOSEN, chosen_location);
@@ -84,8 +79,8 @@ Step SpeedomAlgorithm::calculateNextStep() {
         return updateCurrentLocAndGetNextStep(InternalHouse::DOCKING);
     }
 
-    auto [travel_dist_to_chosen, chosen_location] = internal_house.minimalDistanceLocation();
-    if (!isFeasible(travel_dist_to_chosen, battery_level)) {
+    auto [isEmpty, chosen_location] = internal_house.minimalDistanceLocation(battery_level, max_steps);
+    if (isEmpty) {
         return updateCurrentLocAndGetNextStep(InternalHouse::DOCKING);
     }
     internal_house.bfs(InternalHouse::CHOSEN, chosen_location);
@@ -226,24 +221,33 @@ bool SpeedomAlgorithm::InternalHouse::isInNeighbors(const std::vector<Location>&
     return (std::find(locations.begin(), locations.end(), loc) != locations.end());
 }
 
-std::pair<size_t, Location> SpeedomAlgorithm::InternalHouse::minimalDistanceLocation() const {
+std::pair<bool, Location> SpeedomAlgorithm::InternalHouse::minimalDistanceLocation(size_t current_battery, size_t max_steps) const {
     bool isFirst = true;
-    auto min_location = (*internal_graph.begin()).first;
-    size_t min_distance = calculateTravelDistance(min_location);
+    bool isEmpty = true;
+    auto min_location = current_location;
+    size_t min_distance = 0;
 
     for (const auto& entry : internal_graph) {
+        logger.log(INFO, std::format("SpeedomAlgorithm | print locations: {}", entry.first.toString()));
         if ((entry.second.visited && entry.second.dirt_level == 0) || (entry.first == current_location)) {
             continue;
         }
         size_t current_dist = calculateTravelDistance(entry.first);
+        if(!isFeasible(current_dist, current_battery, max_steps)) {
+            continue;
+        }
+
+        isEmpty = false;
+
         //possible locations
-        if ((current_dist < min_distance) || isFirst) {
+        if ((entry.second.distance_from_current < min_distance) || isFirst) {
             min_location = entry.first;
-            min_distance = current_dist;
+            min_distance = entry.second.distance_from_current;
             isFirst = false;
         }
     }
-    return std::make_pair(min_distance, min_location);
+    logger.log(INFO, std::format("SpeedomAlgorithm | chosen location form minimalDistanceLocation: {}", min_location.toString()));
+    return std::make_pair(isEmpty, min_location);
 
 }
 
@@ -281,5 +285,10 @@ bool SpeedomAlgorithm::InternalHouse::reachableFromCurrent(const Location& loc, 
                                 internal_graph.at(loc).distance_from_current,
                                 battery_size,max_steps));
     return (1 + internal_graph.at(loc).distance_from_docking_station + internal_graph.at(loc).distance_from_current) <= std::min(battery_size, max_steps);
+}
+
+bool SpeedomAlgorithm::InternalHouse::isFeasible(size_t travel_distance, size_t current_battery, size_t max_steps) const {
+    logger.log(INFO, std::format("SpeedomAlgorithm | isFeasible travel distance: {}, current battery: {}, max steps: {}", travel_distance, current_battery, max_steps));
+    return travel_distance + 1 <= std::min(current_battery, max_steps);
 }
 
