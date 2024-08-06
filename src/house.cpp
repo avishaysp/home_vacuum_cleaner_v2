@@ -79,7 +79,7 @@ void House::print() const {
 
 /* Tile */
 
-House::Tile::Tile(Type type, int dirt_level) : type(type), dirt_level(dirt_level) {}
+House::Tile::Tile(Type type, int dirt_level) : type(type), dirt_level(dirt_level), visited(false) {}
 House::Tile::Tile() : type(Open), dirt_level(0) {}
 
 bool House::Tile::isWall() const {
@@ -120,4 +120,14 @@ void House::Tile::decreaseOneDirt() {
     if (dirt_level > 0) {
         --dirt_level;
     }
+}
+
+void House::Tile::setVisited() {
+    if(!visited) {
+        visited = true;
+    }
+}
+
+bool House::Tile::getVisited() {
+    return visited;
 }

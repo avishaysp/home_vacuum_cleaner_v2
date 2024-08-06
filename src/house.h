@@ -24,10 +24,13 @@ public:
         int getDirtLevel() const;
         void setDirtLevel(int new_dirt);
         void decreaseOneDirt();
+        void setVisited();
+        bool getVisited();
 
     private:
         Type type;
         int dirt_level;
+        bool visited;
     };
 
 
